@@ -8,9 +8,9 @@ public class GameOfLife {
 		// (Run one test at a time).
 		// read(fileName);
 		// test1(fileName);
-		// test2(fileName);
+		test2(fileName);
 		// test3(fileName, 3);
-		play(fileName);
+		// play(fileName);
 	}
 
 	// Reads the data file and prints the initial board.
@@ -95,7 +95,6 @@ public class GameOfLife {
 	private static int cellValue(int[][] board, int i, int j) {
 		if (board[i][j] == 1) {
 			if (count(board, i, j) < 2) {
-
 				return 0;
 			} else if (count(board, i, j) > 3) {
 				return 0;
