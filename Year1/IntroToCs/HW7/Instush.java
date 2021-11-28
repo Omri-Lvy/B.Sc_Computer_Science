@@ -1,5 +1,5 @@
 import java.awt.Color;
-
+import java.util.concurrent.TimeUnit;
 import javax.swing.plaf.ColorUIResource;
 
 /**
@@ -207,9 +207,10 @@ public class Instush {
 	 * @param n      - number of morphing steps
 	 */
 	public static void morph(Color[][] source, Color[][] target, int n) {
-		for (int i = n; i >= 0; i--) {
-			Color[][] blend = blend(source, target, i / n);
-			show(blend);
+		for (double i = n; i >= 0; i--) {
+			double alpha = i / n;
+			Color[][] blended = blend(source, target, i / n);
+			show(blended);
 		}
 	}
 
