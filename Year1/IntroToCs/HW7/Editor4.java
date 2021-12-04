@@ -11,9 +11,6 @@ public class Editor4 {
         String sourceFile = args[0];
         Color[][] source = Instush.read(sourceFile);
         Color[][] target = Instush.greyscaled(source);
-        if (source.length != target.length || source[0].length != target[0].length) {
-            target = Instush.scaled(target, source[0].length, source.length);
-        }
         Instush.morph(source, target, Integer.parseInt(args[1]));
     }
 }

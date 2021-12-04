@@ -8,17 +8,26 @@ import javax.swing.plaf.ColorUIResource;
 public class Instush {
 
 	public static void main(String[] args) {
-		Color[][] image = read(args[0]);
+		// Color[][] image = read(args[0]);
+		// Color[][] target = read(args[1]);
+		// // Test read
 		// print(image);
 		// show(image);
-		// show(flippedHorizontally(image));
+		// // Test flip horizontal
 		// print(flippedHorizontally(image));
-		// show(flippedVertically(image));
+		// show(flippedHorizontally(image));
+		// // Test flip vertical
 		// print(flippedVertically(image));
-		// show(greyscaled(image));
+		// show(flippedVertically(image));
+		// // Test flip gray scale
 		// print(greyscaled(image));
+		// show(greyscaled(image));
+		// // Test flip scale
 		// print(scaled(image, Integer.parseInt(args[1]), Integer.parseInt(args[2])));
 		// show(scaled(image, Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+		// // Test flip morph
+		// print(morph(image, target,50);
+		// show(morph(image, target,50);
 	}
 
 	/**
@@ -57,7 +66,11 @@ public class Instush {
 				int r = image[i][j].getRed();
 				int g = image[i][j].getGreen();
 				int b = image[i][j].getBlue();
-				System.out.printf("%3s", "(" + r + ", " + g + ", " + b + ")");
+				System.out.print("(");
+				System.out.printf("%4s", r + ",");
+				System.out.printf("%4s", g + ",");
+				System.out.printf("%3s", b);
+				System.out.print(") ");
 			}
 			System.out.printf("%1s", "\n");
 		}
@@ -208,7 +221,6 @@ public class Instush {
 	 */
 	public static void morph(Color[][] source, Color[][] target, int n) {
 		for (double i = n; i >= 0; i--) {
-			double alpha = i / n;
 			Color[][] blended = blend(source, target, i / n);
 			show(blended);
 		}
