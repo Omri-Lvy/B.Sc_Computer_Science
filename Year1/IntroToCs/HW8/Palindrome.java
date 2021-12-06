@@ -6,7 +6,7 @@ public class Palindrome {
 	}
 
 	public static boolean isPalindrome(String s) {
-		if (s.length() == 1) {
+		if (s.length() == 1 || s.length() == 0) {
 			return true;
 		} else if (s.charAt(0) == s.charAt(s.length() - 1)) {
 			if (isPalindrome(s.substring(1, s.length() - 1))) {
