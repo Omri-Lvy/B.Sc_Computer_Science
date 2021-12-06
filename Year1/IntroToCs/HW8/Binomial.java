@@ -7,8 +7,8 @@ public class Binomial {
 	}
 
 	// Computes and returns the Binomial coefficient
-	public static int binomial(int n, int k) {
-		int[][] memo = new int[n + 1][k + 1];
+	public static long binomial(int n, int k) {
+		long[][] memo = new long[n + 1][k + 1];
 		if (k > n) {
 			return 0;
 		}
@@ -18,7 +18,7 @@ public class Binomial {
 		return (binomial(n - 1, k, memo) + binomial(n - 1, k - 1, memo));
 	}
 
-	public static int binomial(int n, int k, int[][] memo) {
+	public static long binomial(int n, int k, long[][] memo) {
 		if (k > n) {
 			return 0;
 		}

@@ -136,7 +136,15 @@ public class Instush {
 		return greyPixel;
 	}
 
-	/**
+	/**    ​​Marketing 
+
+    ​Project Managment 
+
+    ​Budget planning 
+
+    ​Social media 
+
+    ​Planning​ 
 	 * Returns an image which is the greyscaled version of the given image.
 	 * 
 	 * @param image - the image

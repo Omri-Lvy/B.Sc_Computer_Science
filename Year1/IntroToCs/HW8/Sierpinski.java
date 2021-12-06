@@ -11,7 +11,7 @@ public class Sierpinski {
 		StdDraw.line(0, 0, 1, 0);
 		StdDraw.line(0.5, s, 0, 0);
 		StdDraw.line(1, 0, 0.5, s);
-		sierpinski(n, 0, 1, 0.5, 0, 0, s);
+		sierpinski(n - 1, 0, 1, 0.5, 0, 0, s);
 	}
 
 	public static void sierpinski(int n, double x1, double x2, double x3,
