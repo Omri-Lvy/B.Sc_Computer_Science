@@ -8,10 +8,10 @@ public class IntegerToBinary {
 
     public static void integerToBinary(int n) {
         if (n == 1 || n == 0) {
-            System.out.print(n);
+            System.out.println("n:" + n);
         } else {
             integerToBinary(n / 2);
-            System.out.print(n % 2);
+            System.out.println(n % 2 + "  n:" + n);
         }
     }
 }

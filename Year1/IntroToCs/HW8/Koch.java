@@ -44,6 +44,7 @@ public class Koch {
 		StdDraw.setPenColor(StdDraw.WHITE);
 		StdDraw.line(p1x, p1y, p2x, p2y);
 		StdDraw.setPenColor(StdDraw.BLACK);
+
 		curve(n - 1, x1, y1, p1x, p1y);
 		curve(n - 1, p1x, p1y, p3x, p3y);
 		curve(n - 1, p3x, p3y, p2x, p2y);

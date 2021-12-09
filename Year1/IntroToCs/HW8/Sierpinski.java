@@ -21,7 +21,7 @@ public class Sierpinski {
 		}
 		StdDraw.line((x1 + x2) / 2, (y1 + y2) / 2, (x1 + x3) / 2, (y1 + y3) / 2); // ! left diagonal
 		StdDraw.line((x1 + x2) / 2, (y1 + y2) / 2, (x2 + x3) / 2, (y1 + y3) / 2); // ! right line
-		StdDraw.line((x1 + x3) / 2, (y1 + y3) / 2, (x2 + x3) / 2, (y1 + y3) / 2); // ! stright line
+		StdDraw.line((x1 + x3) / 2, (y1 + y3) / 2, (x2 + x3) / 2, (y1 + y3) / 2); // ! straight line
 		sierpinski(n - 1, x1, (x1 + x2) / 2, (x1 + x3) / 2, y1, (y1 + y2) / 2, (y1 + y3) / 2);
 		sierpinski(n - 1, (x1 + x2) / 2, x2, (x2 + x3) / 2, (y1 + y2) / 2, y2, (y2 + y3) / 2);
 		sierpinski(n - 1, (x1 + x3) / 2, (x2 + x3) / 2, x3, (y1 + y3) / 2, (y2 + y3) / 2, y3);
