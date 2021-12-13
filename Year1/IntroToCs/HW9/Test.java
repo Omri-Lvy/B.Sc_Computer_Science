@@ -9,7 +9,7 @@ public class Test {
     // computerStage3Test();
     // computerStage4Test();
     // computerStage5Test();
-    compu  terStage6Test();
+    computerStage6Test();
   }
 
   public static void registerTest() {
