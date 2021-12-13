@@ -64,15 +64,11 @@ public class Memory {
     public String toString() {
         String text = "";
         for (int i = 0; i < 10; i++) {
-            if (i == 0) {
-                text += +i + "\t" + this.m[i].toString();
-            } else {
-                text += "\n" + i + "\t" + this.m[i].toString();
-            }
+            text += (i + "\t" + this.m[i].toString() + "\n");
         }
-        text = text + "\n";
+        text += "\n";
         for (int j = this.m.length - 10; j < this.m.length; j++) {
-            text += "\n" + j + "\t" + this.m[j].toString();
+            text += j + "\t" + this.m[j].toString() + "\n";
         }
         return text;
     }

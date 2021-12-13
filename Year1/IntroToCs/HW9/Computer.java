@@ -243,6 +243,6 @@ public class Computer {
      * the program counter, and the first and last 10 memory cells.
      */
     public String toString() {
-        return ("D register\t= " + dReg + "\nPC register\t= " + pc + "\nMemory State:\n" + m.toString());
+        return ("D register  = " + dReg + "\nPC register = " + pc + "\nMemory state:\n" + m.toString());
     }
 }
