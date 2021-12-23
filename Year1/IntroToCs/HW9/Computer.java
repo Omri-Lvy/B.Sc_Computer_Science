@@ -201,6 +201,7 @@ public class Computer {
 
     private void execSTOP() {
         System.out.println("Program terminated normally");
+        pc.addOne();
     }
 
     // Implement the other private methods here (execRead, execWrite, execAdd,
