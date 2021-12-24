@@ -88,7 +88,7 @@ public class ListTest {
         list.addFirst(fb3);
         MemBlock fb4 = new MemBlock(100, 10);
         System.out.println(list);
-        list.add(5, fb4);
+        list.add(2, fb4);
         System.out.println("After add " + fb4 + ": " + list);
     }
 

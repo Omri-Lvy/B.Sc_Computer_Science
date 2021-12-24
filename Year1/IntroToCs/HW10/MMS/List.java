@@ -60,7 +60,7 @@ public class List {
 	 *                                  1
 	 */
 	public Node getNode(int index) {
-		if (index < 0 || ((size > 0) && index > (size - 1)) || ((size == 0) && index > (size - 1))) {
+		if (index < 0 || ((size > 0) && index > (size - 1)) || ((size == 0) && index > size)) {
 			throw new IllegalArgumentException("index must be between 0 and (size - 1)");
 		} else {
 			Node nodeAtIndex = first.next;
@@ -139,6 +139,7 @@ public class List {
 				Node newNode = new Node(block);
 				newNode.next = getNode(index);
 				getNode(index - 1).next = newNode;
+				size++;
 			}
 		}
 	}

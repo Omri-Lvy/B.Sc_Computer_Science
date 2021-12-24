@@ -37,12 +37,14 @@ public class MemorySpaceTest {
     }
 
     private static void test() {
-        List list = new List();
-        list.addFirst(fb1);
-        list.addLast(fb2);
-        list.addLast(ab1);
-        list.addFirst(fb3);
-        list.addFirst(ab2);
-
+        MemorySpace m = new MemorySpace(1000);
+        int[] addresses = new int[20];
+        for (int i = 0; i < addresses.length; i++) {
+            addresses[i] = m.malloc((int) Math.pow(i + 2, 5) % 123);
+        }
+        for (int i = 0; i < addresses.length; i += 2) {
+            m.free(addresses[i]);
+        }
+        m.defrag();
     }
 }

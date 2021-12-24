@@ -137,27 +137,22 @@ public class MemorySpace {
 	 * block of the requested size.
 	 */
 	public void defrag() {
-		Node addressItr = freeList.getNode(0);
-		Node valueCheckerItr = freeList.getNode(0).next;
-		while (addressItr != null) {
-			if (valueCheckerItr != null) {
-				if (valueCheckerItr.block.baseAddress == addressItr.block.baseAddress + addressItr.block.length) {
-					addressItr.block.length += valueCheckerItr.block.length;
-					freeList.remove(valueCheckerItr.block);
-					valueCheckerItr = freeList.getNode(0);
-				} else {
-					valueCheckerItr = valueCheckerItr.next;
-					if (valueCheckerItr == null) {
-						addressItr = addressItr.next;
-						valueCheckerItr = freeList.getNode(0);
-
-					}
+		List defragList = new List();
+		ListIterator curIterator = new ListIterator(freeList.getNode(0));
+		while (curIterator.hasNext()) {
+			ListIterator scanIterator = new ListIterator(freeList.getNode(0));
+			MemBlock temp = curIterator.current.block;
+			while (scanIterator.hasNext()) {
+				if (temp.baseAddress + temp.length == scanIterator.current.block.baseAddress) {
+					temp.length += scanIterator.current.block.length;
+					scanIterator = freeList.iterator();
 				}
-			} else {
-				addressItr = addressItr.next;
+				scanIterator.next();
 			}
+			curIterator.next();
+			defragList.addLast(temp);
 		}
-
+		freeList = defragList;
 	}
 
 }
