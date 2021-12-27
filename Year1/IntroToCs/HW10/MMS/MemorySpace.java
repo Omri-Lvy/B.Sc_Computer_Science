@@ -77,20 +77,20 @@ public class MemorySpace {
 		// If the length of the found block is exactly the same as the requested length,
 		// then the found block is removed from the freeList, and appended to the
 		// allocatedList.
-		Node current = freeList.getNode(0);
-		while (current != null) {
-			if (current.block.length >= length) {
-				MemBlock newMemBlock = new MemBlock(current.block.baseAddress, length);
+		ListIterator current = new ListIterator(freeList.getNode(0));
+		while (current.hasNext()) {
+			if (current.current.block.length >= length) {
+				MemBlock newMemBlock = new MemBlock(current.current.block.baseAddress, length);
 				allocatedList.addLast(newMemBlock);
-				if (current.block.length == length) {
-					freeList.remove(current.block);
+				if (current.current.block.length == length) {
+					freeList.remove(current.current.block);
 				} else {
-					current.block.baseAddress += length;
-					current.block.length -= length;
+					current.current.block.baseAddress += length;
+					current.current.block.length -= length;
 				}
 				return newMemBlock.baseAddress;
 			}
-			current = current.next;
+			current.next();
 		}
 		if (length != previousLength) {
 			previousLength = length;
@@ -108,14 +108,14 @@ public class MemorySpace {
 	public void free(int address) {
 		// Adds the memory block to the free list, and removes it from the allocated
 		// list.
-		Node current = allocatedList.getNode(0);
-		while (current != null) {
-			if (current.block.baseAddress == address) {
-				freeList.addLast(current.block);
-				allocatedList.remove(current.block);
+		ListIterator current = new ListIterator(allocatedList.getNode(0));
+		while (current.hasNext()) {
+			if (current.current.block.baseAddress == address) {
+				freeList.addLast(current.current.block);
+				allocatedList.remove(current.current.block);
 				break;
 			}
-			current = current.next;
+			current.next();
 		}
 	}
 

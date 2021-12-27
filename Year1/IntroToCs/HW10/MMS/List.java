@@ -63,11 +63,11 @@ public class List {
 		if (index < 0 || ((size > 0) && index > (size - 1)) || ((size == 0) && index > size)) {
 			throw new IllegalArgumentException("index must be between 0 and (size - 1)");
 		} else {
-			Node nodeAtIndex = first.next;
+			ListIterator current = new ListIterator(first.next);
 			for (int i = 0; i < index; i++) {
-				nodeAtIndex = nodeAtIndex.next;
+				current.next();
 			}
-			return nodeAtIndex;
+			return current.current;
 		}
 	}
 
@@ -84,8 +84,7 @@ public class List {
 		if (index < 0 || ((size > 0) && index > (size - 1))) {
 			throw new IllegalArgumentException("index must be between 0 and (size - 1)");
 		} else {
-			Node nodeAtIndex = getNode(index);
-			return nodeAtIndex.block;
+			return getNode(index).block;
 		}
 	}
 
@@ -97,13 +96,12 @@ public class List {
 	 *         this list
 	 */
 	public int indexOf(MemBlock block) {
-		Node current = first.next;
+		ListIterator current = new ListIterator(getNode(0));
 		for (int i = 0; i < size; i++) {
-			if (current.block.equals(block)) {
+			if (current.current.block.equals(block)) {
 				return i;
-			} else {
-				current = current.next;
 			}
+			current.next();
 		}
 
 		return -1;
@@ -193,10 +191,10 @@ public class List {
 		// Replace the following code with code that usese
 		// StringBuilder and has the same effect.
 		StringBuilder s = new StringBuilder("[ ");
-		Node current = first.next; // Skips the dummy
-		while (current != null) {
-			s.append(current.block).append(" ");
-			current = current.next;
+		ListIterator current = new ListIterator(getNode(0)); // Skips the dummy
+		while (current.hasNext()) {
+			s.append(current.current.block).append(" ");
+			current.next();
 		}
 		s.append("]");
 		return s.toString();
