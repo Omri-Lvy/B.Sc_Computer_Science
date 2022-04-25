@@ -22,7 +22,7 @@ public class Sorting {
 	 * @param arr - the array to be sorted
 	 */
 	public static void quickSort(double[] arr) {
-		quickSort(arr, arr.length, 0);
+		quickSort(arr, arr.length - 1, 0);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class Sorting {
 			quickSort(arr, r, q - 1);
 			quickSort(arr, q + 1, p);
 		} else {
-			// bubbleSort(double[] arr);
+			bubbleSort(arr);
 		}
 	}
 
@@ -52,8 +52,8 @@ public class Sorting {
 	 * @param p   - Sub-array last index
 	 */
 	private static int partition(double[] arr, int p, int r) {
-		double x = arr[r];
-		int j = p - 1;
+		double x = arr[p];
+		int j = p;
 		int i = r;
 		while (true) {
 			while (j >= r) {
@@ -120,12 +120,12 @@ public class Sorting {
 			return arr[r];
 		int q = partition(arr, p, r);
 		int m = q - r + 1;
-		if (i - 1 == m)
+		if (i == m)
 			return arr[q];
-		if (i - 1 < m)
-			return QuickSelect(arr, q - 1, r, i - 1);
+		if (i < m)
+			return QuickSelect(arr, q - 1, r, i);
 		else
-			return QuickSelect(arr, p, q + 1, i - 1 - m);
+			return QuickSelect(arr, p, q + 1, i - m);
 	}
 
 	/**
@@ -201,31 +201,12 @@ public class Sorting {
 	 * @param arr - the array to be sorted
 	 */
 	public static void bubbleSort(double[] arr) {
-		bubbleSort(arr, arr.length - 1, 0);
-	}
-
-	/**
-	 * Helper private function of bubbleSort.
-	 * Being called by the public method
-	 * 
-	 * @param arr - the array to be sorted
-	 * @param p   - the fisrt index in the range
-	 * @param r   - the last index in the range
-	 */
-	private static void bubbleSort(double[] arr, int p, int r) {
-		boolean stop = false;
-		for (int i = r; i <= p; i++) {
-			if (stop)
-				return;
-			boolean swap = false;
-			for (int j = r + 1; j <= p - i + 1; j++) {
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 1; j < arr.length - i; j++) {
 				if (arr[j - 1] > arr[j]) {
-					swap = true;
-					swap(arr, j - 1, j);
+					swap(arr, j, j - 1);
 				}
 			}
-			if (!swap)
-				return;
 		}
 	}
 
@@ -240,15 +221,29 @@ public class Sorting {
 	 * @param k   - an upper bound for the values of all elements in the array.
 	 */
 	public static void countingSort(int[] arr, int k) {
-		// your code comes here
+		int[] B = new int[arr.length];
+		int[] C = new int[k + 1];
+		for (int i = 0; i < arr.length; i++) {
+			C[arr[i]]++;
+		}
+		for (int i = 1; i < C.length; i++) {
+			C[i] = C[i] + C[i - 1];
+		}
+		for (int i = arr.length - 1; i >= 0; i--) {
+			B[C[arr[i]] - 1] = arr[i];
+			C[arr[i]]--;
+		}
+		for (int i = 0; i < B.length; i++) {
+			arr[i] = B[i];
+		}
 	}
 
 	public static void main(String[] args) {
 
-		// countingVsQuick();
-		// mergeVsQuick();
-		// mergeVsQuickOnSortedArray();
-		// mergeVsBubble();
+		countingVsQuick();
+		mergeVsQuick();
+		mergeVsQuickOnSortedArray();
+		mergeVsBubble();
 		QuickSelectVsQuickSort();
 
 	}
@@ -262,6 +257,7 @@ public class Sorting {
 			long sumQuick = 0;
 			long sumCounting = 0;
 			for (int k = 0; k < T; k++) {
+				System.out.println("countingVsQuick: " + i + "." + k);
 				int size = (int) Math.pow(2, i);
 				double[] a = new double[size];
 				int[] b = new int[size];
@@ -298,6 +294,7 @@ public class Sorting {
 			long sumQuick = 0;
 			long sumMerge = 0;
 			for (int k = 0; k < T; k++) {
+				System.out.println("mergeVsQuick: " + i + "." + k);
 				int size = (int) Math.pow(2, i);
 				double[] a = new double[size];
 				double[] b = new double[size];
@@ -331,6 +328,7 @@ public class Sorting {
 			long sumQuick = 0;
 			long sumMerge = 0;
 			for (int k = 0; k < T; k++) {
+				System.out.println("mergeVsQuickOnSortedArray: " + i + "." + k);
 				int size = (int) Math.pow(2, i);
 				double[] a = new double[size];
 				double[] b = new double[size];
@@ -369,6 +367,7 @@ public class Sorting {
 				double[] a = new double[size];
 				double[] b = new double[size];
 				for (int j = 0; j < a.length; j++) {
+					System.out.println("mergeVsBubble: " + i + "." + k);
 					a[j] = r.nextGaussian() * 5000;
 					b[j] = a[j];
 				}
@@ -400,6 +399,7 @@ public class Sorting {
 			long sumQsort = 0;
 			long sumQselect = 0;
 			for (int k = 0; k < T; k++) {
+				System.out.println("QuickSelectVsQuickSort: " + i + "." + k);
 				int size = (int) Math.pow(2, i);
 				double[] a = new double[size];
 				double[] b = new double[size];

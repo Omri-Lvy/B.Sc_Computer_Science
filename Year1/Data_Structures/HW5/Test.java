@@ -1,8 +1,8 @@
 public class Test {
     public static void main(String[] args) {
-        double[] arr = new double[6];
+        int[] arr = new int[6];
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = Math.round((Math.random() * 10) * 100.00) / 100.00;
+            arr[i] = (int) (Math.round((Math.random() * 10))); // * 100.00) / 100.00;
         }
         System.out.print("Original Array: ");
         for (int i = 0; i < arr.length; i++) {
@@ -11,11 +11,34 @@ public class Test {
         System.out.println("");
         // quickSort(arr);
         // bubbleSort(arr);
-        System.out.println(QuickSelect(arr, 5));
+        countingSort(arr, 10);
+        // System.out.println(QuickSelect(arr, 5));
         // System.out.print("Sorted Array: ");
-        // for (int i = 0; i < arr.length; i++) {
-        // System.out.print("[" + arr[i] + "] ");
-        // }
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print("[" + arr[i] + "] ");
+        }
+    }
+
+    public static void countingSort(int[] arr, int k) {
+        int[] b = new int[arr.length];
+        countingSort(arr, b, k);
+    }
+
+    public static void countingSort(int[] a, int[] b, int k) {
+        int[] c = new int[k + 1];
+        for (int i = 0; i < a.length; i++) {
+            c[a[i]]++;
+        }
+        for (int i = 1; i < c.length; i++) {
+            c[i] = c[i] + c[i - 1];
+        }
+        for (int i = a.length - 1; i >= 0; i--) {
+            b[c[a[i]] - 1] = a[i];
+            c[a[i]]--;
+        }
+        for (int i = 0; i < b.length; i++) {
+            a[i] = b[i];
+        }
     }
 
     public static void quickSort(double[] arr) {
@@ -49,8 +72,8 @@ public class Test {
      * @param p   - Sub-array last index
      */
     private static int partition(double[] arr, int p, int r) {
-        double x = arr[r];
-        int j = p - 1;
+        double x = arr[p];
+        int j = p;
         int i = r;
         while (true) {
             while (j >= r) {
@@ -135,12 +158,12 @@ public class Test {
             return arr[r];
         int q = partition(arr, p, r);
         int m = q - r + 1;
-        if (i - 1 == m)
+        if (i == m)
             return arr[q];
-        if (i - 1 < m)
-            return QuickSelect(arr, q - 1, r, i - 1);
+        if (i < m)
+            return QuickSelect(arr, q - 1, r, i);
         else
-            return QuickSelect(arr, p, q + 1, i - 1 - m);
+            return QuickSelect(arr, p, q + 1, i - m);
     }
 
 }
