@@ -92,7 +92,7 @@ public class Sorting {
 	}
 
 	/**
-	 * Given an array arr and an index i returns the the i'th order statstics in
+	 * Given an array arr and an index i returns the the i'th order statistics in
 	 * arr.
 	 * In other words, it returns the element with rank i in the array arr.
 	 * 
@@ -145,7 +145,7 @@ public class Sorting {
 	 * 
 	 * 
 	 * @param arr - the array to be sorted
-	 * @param p   - the fisrt index in the range that need to be sorted
+	 * @param p   - the first index in the range that need to be sorted
 	 * @param r   - the last index in the range that need to be sorted
 	 */
 	private static void mergeSort(double[] arr, int p, int r) {
@@ -163,7 +163,7 @@ public class Sorting {
 	 * 
 	 * 
 	 * @param arr - the array to be sorted
-	 * @param p   - the fisrt index in the first range that needs to be merged.
+	 * @param p   - the first index in the first range that needs to be merged.
 	 * @param q   - the last index in the first range that needs to be merged.
 	 * @param r   - the last index in the second range that needs to be merged.
 	 */
@@ -217,7 +217,7 @@ public class Sorting {
 	 * 
 	 * Should run in complexity O(n + k) in the worst case.
 	 * 
-	 * @param arr - an array with possitive integers
+	 * @param arr - an array with positive integers
 	 * @param k   - an upper bound for the values of all elements in the array.
 	 */
 	public static void countingSort(int[] arr, int k) {
