@@ -1,3 +1,11 @@
 {
-    "java.dependency.syncWithFolderExplorer": true
+    "java.project.referencedLibraries": [
+        "library/**/*.jar",
+        "*.jar",
+        "HW5/jcommon-1.0.21.jar",
+        "HW5/jfreechart-1.0.17.jar",
+        "HW5/plotter.jar"
+    ],
+    "java.dependency.syncWithFolderExplorer": true,
+    "java.dependency.packagePresentation": "hierarchical"
 }
