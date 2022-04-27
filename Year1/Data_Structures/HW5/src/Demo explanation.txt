@@ -1,0 +1,12 @@
+/*
+ * The supplied graph contains a runtime comparision between two operations
+ * - Accessing the middle element in a linked list
+ * - Accessing the middle element in an array
+ * The green line represents the function 'n', supplied here for reference.
+*/
+
+Explanation for graph 1:
+  The red line is constant, and does not depend on the size of the input.
+  This is due to the fact that accessing an element in an array can be done in constant time.
+  The green blue line scales like 'n', it is the same as the green line, only it has a different slope.
+  This illustrates the runtime of accessing an element in a linked list which is typically O(n)
