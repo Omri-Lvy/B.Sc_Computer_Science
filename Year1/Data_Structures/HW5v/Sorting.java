@@ -51,30 +51,43 @@ public class Sorting {
 	 * @param r   - Sub-array first index
 	 * @param p   - Sub-array last index
 	 */
-	private static int partition(double[] arr, int p, int r) {
+//	private static int partition(double[] arr, int p, int r) {
+//		double x = arr[p];
+//		int j = p;
+//		int i = r;
+//		while (true) {
+//			while (j >= r) {
+//				if (arr[j] < x) {
+//					break;
+//				}
+//				j--;
+//			}
+//			while (i < p) {
+//				if (arr[i] >= x) {
+//					break;
+//				}
+//				i++;
+//			}
+//			if (i < j) {
+//				swap(arr, i, j);
+//			} else {
+//				swap(arr, j + 1, p);
+//				return (j + 1);
+//			}
+//		}
+//	}
+
+	private static int partition(double[] arr,int p, int r){
 		double x = arr[p];
-		int j = p;
-		int i = r;
-		while (true) {
-			while (j >= r) {
-				if (arr[j] < x) {
-					break;
-				}
-				j--;
-			}
-			while (i < p) {
-				if (arr[i] >= x) {
-					break;
-				}
+		int i = r - 1;
+		for (int j=r;j<p;j++){
+			if(arr[j]<=x){
 				i++;
-			}
-			if (i < j) {
-				swap(arr, i, j);
-			} else {
-				swap(arr, j + 1, p);
-				return (j + 1);
+				swap(arr,i,j);
 			}
 		}
+		swap(arr,i+1,p);
+		return i+1;
 	}
 
 	/**
