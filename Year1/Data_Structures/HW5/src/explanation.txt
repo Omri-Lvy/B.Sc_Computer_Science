@@ -1,0 +1,55 @@
+# Counting vs QuickSort:
+    The red line represent the run time of counting sort.
+    The blue line represent the run time of quick sort.
+    The green line represent nlog(n).
+    We can see that the red line scales in steadily increasing slope,
+    so we conclude that the run time complexity of counting sort is O(n).
+    The blue line scales more like nlog(n) and even smaller, so we conclude that the run time
+    complexity of quick sort is O(nlog(n)).
+
+# Merge vs QuickSort:
+    The red line represent the run time of quick sort.
+    The blue line represent the run time of merge sort.
+    The green line represent nlog(n).
+    The blue line graph is increasing is scales like nlog(n) and even smaller. Since the algorithm dived the array into 2
+    parts on each iteration, hence its time complexity is O(nlog(n)) as described in the graph.
+    As we can see the red line slope is also scales like nlog(n). This happens since our
+    algorith always picks the right most element as the pivot, and the array isn't sorted
+    there it's more likely that the algorithm will pick a pivot closer to the median.
+    Therefore, the algorithm ends up with an average complexity of O(nlog(n)).
+
+
+# Merge vs QuickSort (sorted):
+    The red line represent the run time of quick sort on sorted array.
+    The blue line represent the run time of merge sort.
+    The green line represent nlog(n).
+    As we can see, unlike the previous graph the red line slope is increasing exponentially as n increasing. This happens
+    since the array the quick sort function gets is already sorted and our algorith always picks
+    the right most element as the pivot the algorithm ends up running over array of n elements n times.
+    That is, we get the worst case of this algorithm which is has time complexity of O(n^2).
+    The blue line, as in the previous graph is increasing is scales like nlog(n) and even smaller.
+    Since the algorithm dived the array into 2 parts on each iteration,
+    hence its time complexity is O(nlog(n)) as described in the graph.
+
+
+# Merge vs Bubble:
+    sThe blue line represent the run time of bubble sort.
+    The red line represent the run time of merge sort.
+    The green line represent nlog(n).
+    As described in previous graphs, the algorithm of merge sort has time complexity of O(nlo(n)).
+    As we can see the graph the red line is almost identical to the green line representing nlog(n).
+    We can see that the blue line slope is increasing exponentially. As the bubble sort algorithm
+    run over the n element of the array n times. Therefor it's time complexity is O(n^2).
+
+# QuickSelect vs QuickSort
+    The blue line represent the run time of quick select.
+    The red line represent the run time of quick sort.
+    The green line represent nlog(n).
+    As we can see the red line scales proximity like the green line, as the quicksort algorithm
+    use an arbitrary pivot, which increasing the chance to pick pivot that is closer to the median.
+    Hench as we explained before yields an average time complexity of O(nlog(n)).
+    The quick select also use the partition function just like the quick sort algorithm. But unlike the
+    quick sort it use it only call it once on each occurrence of the recursion,
+    either on the left of the pivot or to the right.
+    Thus, the blue line is lower than the red line and scales more like n
+    as the slope of the blue line grows linearly.

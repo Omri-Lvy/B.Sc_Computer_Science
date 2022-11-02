@@ -1,12 +1,40 @@
-/*
- * The supplied graph contains a runtime comparision between two operations
- * - Accessing the middle element in a linked list
- * - Accessing the middle element in an array
- * The green line represents the function 'n', supplied here for reference.
-*/
+Counting Vs quick:
+The red line represent Counting Sort and we can plainly see
+it is lower than the blue line that represents QuickSelect
+as Counting Sort has time complexity of O(n) and indeed we
+see that line is linear ressembling n.
+On the other hand QuickSelect with time complexity of O(nlogn)
+is dependant on the pivot we choose, therfore is a bit
+different everytime we run it.
 
-Explanation for graph 1:
-  The red line is constant, and does not depend on the size of the input.
-  This is due to the fact that accessing an element in an array can be done in constant time.
-  The green blue line scales like 'n', it is the same as the green line, only it has a different slope.
-  This illustrates the runtime of accessing an element in a linked list which is typically O(n)
+Merge Vs quick:
+The red line is QuickSort and the blue is mergesort.
+we see mergesort is similar to the green line (which represent nlogn)
+as mergesort is not dependant on the array as it divieds the array in half recursively
+and then merge it back together.
+while quicksort is dependant on the pivot we choose, when the array is not sorted
+it has a better chance to find a pivot that will be placed closer to the middle of the
+array rather than on the ends of the array. resulting in the red line resembling nlogn as well.
+
+Merge Vs quick on sorted:
+the red line represents quicksort, as the array is sorted and our pivot is chosen to be the rightmost
+index, we get that everytime the algorithm is running it divieds the array to n-1 and 1,
+whilst the 1 is the pivot and already sorted, quicksort ends up running over an array of n elemnts and 
+recursing n times each time going over the entire array without the pivot. we get the worst case of O(n^2).
+while mergesort, as explained in the previous paragraph, does not depend on the array being sorted or not, will always
+divide the array to two parts, hence running in O(nlogn) which we can see with the blue line
+being in close proximity to the green one that represents nlogn.
+
+Merge vs Bubble:
+As we mentioned in the last two explanations, merge always runs on nlogn, thus the red line is
+in proximity to the green line that represents nlogn.
+BubbleSort on the other hand runs on O(n^2) as is iterates over the entire array while making comparisons
+and advancing the iterator by 1 everytime it finish comparing the entire array.
+we can plainly see the blue graph takes the shape of n^2.
+
+QuickSelect Vs QuickSort:
+We can see the red graph of quicksort is in proximity of the green nlogn as quicksort uses an arbitrary pivot,
+as we mentioned before, the more the pivot is "closer" to the middiean of the array, the more the graph will look like nlogn.
+as for quickselect, it also uses partition to find a pivot, but unlike quicksort, it only recurses once each recurtionm
+either to the left of the pivot or to the right in search for the i'th rank.
+therefore the blue line rpresenting its graph is way lower than the red line representing quicksort.

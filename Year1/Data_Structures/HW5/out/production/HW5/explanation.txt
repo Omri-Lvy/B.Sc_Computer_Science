@@ -1,0 +1,17 @@
+Counting vs QuickSort:
+The red line represent the run time of counting sort.
+The blue line represent the run time of quick sort.
+The green line represent nlog(n).
+We can see that the red line scales in increasing slope, which is getting bigger as n gets bigger.
+Its seems as if the graph is around the n mark
+
+Merge vs QuickSort:
+
+
+Merge vs QuickSort (sorted):
+
+
+Merge vs Bubble:
+
+
+QuickSelcet vs QuickSort
