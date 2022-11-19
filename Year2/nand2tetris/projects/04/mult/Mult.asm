@@ -10,3 +10,26 @@
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
 // Put your code here.
+// Set sum to 0
+@R2
+M = 0
+//Set counter to R0
+@R0
+D = M
+@COUNTER
+M = D
+// While counter > 0 add R1 to sum
+(LOOP)
+    @COUNTER
+    D = M
+    @LOOP_END
+    D; JEQ
+    @R1
+    D = M
+    @R2
+    M = M + D
+    @COUNTER
+    M = M - 1
+    @LOOP
+    0; JMP
+(LOOP_END)
