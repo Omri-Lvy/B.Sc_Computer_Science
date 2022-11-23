@@ -25,11 +25,11 @@ M = D
     @LOOP_END
     D; JEQ
     @R1
-    D = M
+    D = M // Set D = R1
     @R2
-    M = M + D
+    M = M + D // add R1 to sum
     @COUNTER
-    M = M - 1
+    M = M - 1 // decrement counter by 1
     @LOOP
     0; JMP
 (LOOP_END)

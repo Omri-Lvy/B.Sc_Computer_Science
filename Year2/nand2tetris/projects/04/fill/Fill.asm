@@ -13,69 +13,69 @@
 
 // Put your code here.
 
-(LOOP)
+(LOOP) // infinite loop that listens to the keyboard input
    @24576
-   D = M
-   @LOOP_BLANKES
-   D;JGT
+   D = M // set D = keyboard value
+   @LOOP_BLANKES 
+   D;JGT // if key is pressed go to blank loop
    @LOOP_CLEAR
-   D;JEQ
+   D;JEQ // if no key is pressed go to clear loop
    @LOOP
    0;JMP
 (LOOP_END)
 (LOOP_BLANKES)
-    @OFFSET
+    @OFFSET // reset offset to 0;
     M = 0
     (LOOP_SCREEN_BLANKS)
         @OFFSET
-        D = M
+        D = M // set D = offset
         @8192
-        D = A - D
+        D = A - D // check if reached the end of the screen
         @LOOP_SCREEN_END
-        D;JEQ
+        D;JEQ // if reached end of the screen end loop
         @OFFSET
-        D = M
+        D = M // set D = offset
         @SCREEN
-        A = A + D
-        M = -1
+        A = A + D // set screen address to current address
+        M = -1 // blank the current pixel's block 
         @OFFSET
-        M = M + 1
+        M = M + 1 // increment offset by 1
         @24576
-        D = M
+        D = M // set D = keyboard value
         @LOOP_CLEAR
-        D;JEQ
+        D;JEQ // if key is no longer pressed go to clear loop
         @LOOP_SCREEN_BLANKS
-        0;JMP
+        0;JMP // otherwise continue blank loop
     (LOOP_SCREEN_END)
     @LOOP
     0;JMP
 (LOOP_BLANKES_END)
 (LOOP_CLEAR)
-    @OFFSET
-    M = 0
+    @OFFSET // reset offset to 0;
+    M = 0 
     (LOOP_SCREEN_CLEAR)
-        @OFFSET
+        @OFFSET // set D = offset
         D = M
         @8192
-        D = A - D
+        D = A - D // check if reached the end of the screen
         @LOOP_SCREEN_END
-        D;JEQ
+        D;JEQ // if reached end of the screen end loop
         @OFFSET
-        D = M
+        D = M // set D = offset
         @SCREEN
-        A = A + D
-        M = 0
+        A = A + D // set screen address to current address
+        M = 0 // blank the current pixel's block 
         @OFFSET
-        M = M + 1
+        M = M + 1 // increment offset by 1
         @24576
         D = M
         @LOOP_BLANKES
-        D;JGT
+        D;JGT // if key is pressed go to blank loop
         @LOOP_SCREEN_CLEAR
-        0;JMP
+        0;JMP // otherwise continue clear loop
     (LOOP_SCREEN_END)
     @LOOP
-    0;JMP
+    0;JMP // continue infint loop
 (LOOP_CLEAR_END)
     
 
