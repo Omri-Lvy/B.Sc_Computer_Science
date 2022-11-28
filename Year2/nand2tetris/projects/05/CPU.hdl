@@ -39,5 +39,39 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    
+    // check if A-instructions
+    Not(in=instruction[15], out=isAInstruction); 
+    Mux16(a=aluOutToAReg, b=instruction, sel=isAInstruction, out=mux1Out);
+
+    Or(a=isAInstruction, b=instruction[5], out=aRegisterLoad); // check if load A-Register
+    ARegister(in=mux1Out, load=aRegisterLoad, out=aRegister, out[0..14]=addressM); // set value of A-register
+    
+    And(a=instruction[15], b=instruction[12], out=isCInstruction); // check if C-instructions
+    Mux16(a=aRegister, b=inM, sel=isCInstruction, out=muxToAlu); // select if send A-register or M-input to ALU
+    
+    // ALU
+    ALU(x=dRegister, y=muxToAlu, zx=instruction[11], nx=instruction[10], zy=instruction[9], 
+        ny=instruction[8], f=instruction[7], no=instruction[6], 
+        out=aluOutToAReg, out=aluOutToDReg, out=outM, zr=aluZr, ng=aluNg);
+    
+    And(a=instruction[15], b=instruction[4], out=dRegisterLoad); // check if load D-Register
+    DRegister(in=aluOutToDReg, load=dRegisterLoad, out=dRegister); // set value to D-register
+    
+    And(a=instruction[3], b=instruction[15], out=writeM); // check if write to memory
+
+    // check if jump
+    Not(in=aluNg, out=notAluNeg);
+    Not(in=aluZr, out=notAluZr);
+    And(a=notAluZr, b=aluNg, out=isNegative);
+    And(a=notAluZr, b=notAluNeg, out=isPositive);
+    And(a=isPositive, b=instruction[0], out=jgt);
+    And(a=aluZr, b=instruction[1], out=jeq);
+    And(a=isNegative, b=instruction[2], out=jlt);
+    Or(a=jgt, b=jeq, out=greaterEqualThan0);
+    Or(a=greaterEqualThan0, b=jlt, out=greaterEqualThan0OrLessEqualThan0);
+    And(a=greaterEqualThan0OrLessEqualThan0, b=instruction[15], out=pcLoad);
+
+    // increase or reset pc
+    PC(in=aRegister, load=pcLoad, inc=true, reset=reset, out[0..14]=pc); 
 }
