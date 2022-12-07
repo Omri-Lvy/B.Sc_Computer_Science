@@ -1,2 +1,3 @@
-package PACKAGE_NAME;public class Demo {
+public class Demo {
+    Integer a = 6;
 }
