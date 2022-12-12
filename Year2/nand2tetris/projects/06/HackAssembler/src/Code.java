@@ -11,6 +11,7 @@ public class Code {
         setJump();
     }
 
+    // insert values to the comparison hash map
     private void setComp(){
         comp.put("0","0101010");
         comp.put("1","0111111");
@@ -41,6 +42,7 @@ public class Code {
         comp.put("D|A","0010101");
         comp.put("D|M","1010101");
     }
+    // insert values to the destination hash map
     private void setDest(){
         dest.put("null","000");
         dest.put("M","001");
@@ -52,6 +54,8 @@ public class Code {
         dest.put("AD","110");
         dest.put("ADM","111");
     }
+
+    // insert values to the jump hash map
     private void setJump(){
         jump.put("null","000");
         jump.put("JGT","001");
@@ -63,6 +67,7 @@ public class Code {
         jump.put("JMP","111");
     }
 
+    // return binary value of a given value
     public String comp(String cmp){
         return comp.get(cmp);
     }
