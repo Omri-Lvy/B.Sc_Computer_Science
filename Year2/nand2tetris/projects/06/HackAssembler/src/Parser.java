@@ -71,8 +71,4 @@ public class Parser {
             return code.jump("null");
         }
     }
-
-    public String getCurrentInstruction () {
-        return currentInstruction;
-    }
 }
