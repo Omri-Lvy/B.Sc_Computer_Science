@@ -1,4 +1,9 @@
 *.docx
 *.zip
+*.pdf
+*.iml
 Linear_Algebra_II
 AdvancedPrograming
+.idea
+.vscode
+/Doug-from-Marketing/*.txt
