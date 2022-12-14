@@ -9,12 +9,16 @@ public enum InstructionsEnum {
     C_FUNCTION("C_FUNCTION"),
     C_RETURN("C_RETURN"),
     C_CALL("C_CALL");
-    InstructionsEnum(String type) {
+
+    InstructionsEnum (String type) {
         this.type = type;
-    };
+    }
+
+    ;
     private String type;
 
     public String getType () {
         return type;
     }
 }
+
