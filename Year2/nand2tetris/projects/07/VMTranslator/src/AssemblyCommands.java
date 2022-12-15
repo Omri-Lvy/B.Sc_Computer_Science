@@ -108,12 +108,12 @@ public class AssemblyCommands {
     private String getPopLocalCommands (int index) {
         return
                 "@LCL\n" +
-                        "D=M\n" +                // get LCL address
-                        "@" + index + "\n" +    // get index value
-                        "A=D+A\n" +              // set address to relevant local address
-                        "D=M\n" +                // get value
-                        "@SP\n" +
-                        "M=M-1\n";                 // decrease sp value by 1
+                "D=M\n" +                // get LCL address
+                "@" + index + "\n" +    // get index value
+                "A=D+A\n" +              // set address to relevant local address
+                "D=M\n" +                // get value
+                "@SP\n" +
+                "M=M-1\n";                 // decrease sp value by 1
     }
 
     private String getPushArgumentCommands (int index) {
@@ -246,7 +246,7 @@ public class AssemblyCommands {
                 "AM=M-1\n" +    // decrease sp by 1 and go to first item in the stack
                 "D=M\n" +       //set D to first item value
                 "A=A-1\n" +     // move to 2nd items in the stack
-                "M=D-M\n";       // subtract second item value from D and put result in stack
+                "M=M-D\n";       // subtract second item value from D and put result in stack
     }
 
     private String getNegCommands () {
@@ -261,7 +261,7 @@ public class AssemblyCommands {
                 "AM=M-1\n" +    // decrease sp by 1 and go to first item in the stack
                 "D=M\n" +       // set D to first item value
                 "A=A-1\n" +     // go to second item in the stack
-                "D=D-M\n" +     // subtract second item value from D
+                "D=M-D\n" +     // subtract second item value from D
                 "M=-1\n" +      // tentatively set result to true
                 "@jumpTo" + labelNum + "\n" +   // set label address to jump to if x == y
                 "D;JEQ\n" +     // jump if equal
@@ -277,7 +277,7 @@ public class AssemblyCommands {
                 "AM=M-1\n" +    // decrease sp by 1 and go to first item in the stack
                 "D=M\n" +       // set D to first item value
                 "A=A-1\n" +     // go to second item in the stack
-                "D=D-M\n" +     // subtract second item value from D
+                "D=M-D\n" +     // subtract second item value from D
                 "M=-1\n" +      // tentatively set result to true
                 "@jumpTo" + labelNum + "\n" +   // set label address to jump to if x > y
                 "D;JGT\n" +     // jump if equal
