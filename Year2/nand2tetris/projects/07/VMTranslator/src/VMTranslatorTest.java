@@ -55,5 +55,22 @@ public class VMTranslatorTest {
         writer.close();
     }
 
+    @Test
+    public void commandWriteTest() throws IOException {
+        while (parser.hasMoreLine()) {
+            parser.advance();
+            if(parser.commandType() == InstructionsEnum.C_ARITHMETIC.getType()) {
+                writer.writeArithmetic(parser.arg1());
+            }
+            if (parser.commandType() == InstructionsEnum.C_PUSH.getType()) {
+                writer.writePushPop("push",parser.arg1(), parser.arg2());
+            }
+            if (parser.commandType() == InstructionsEnum.C_POP.getType()) {
+                writer.writePushPop("pop",parser.arg1(), parser.arg2());
+            }
+        }
+        writer.close();
+    }
+
 
 }
