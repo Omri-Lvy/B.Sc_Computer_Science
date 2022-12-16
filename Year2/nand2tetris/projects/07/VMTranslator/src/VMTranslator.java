@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class VMTranslator {
 
-    public static void main (String[] args) throws IOException {
+    public static void main (String[] args) throws Exception {
         File inputFile = new File(args[0]);
         FileWriter outputFile = new FileWriter(args[0].replace(".vm", ".asm"),false);
         CodeWriter codeWriter = new CodeWriter(outputFile);

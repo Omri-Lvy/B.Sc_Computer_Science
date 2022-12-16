@@ -2,9 +2,11 @@ public class AssemblyCommands {
 
     private int labelNum = 0;
 
-    public AssemblyCommands(){}
+    public AssemblyCommands () {
+    }
 
-    public String getArithmeticCommands (String command) {
+    public String getArithmeticCommands (String command) throws Exception {
+        // return the arithmetic command corresponding assembly code
         switch (command) {
             case "add":
                 return getAddCommands();
@@ -25,15 +27,14 @@ public class AssemblyCommands {
             case "not":
                 return getNotCommands();
         }
-        return null;
+        throw new Exception("Illegal command");
     }
 
-    public String getPushPopCommands (String command, int index) {
+    public String getPushPopCommands (String command, int index) throws Exception {
+        // return the push/pop command corresponding assembly code
         switch (command) {
             case "pushconstant":
                 return getPushConstantCommands(index);
-            case "popconstant":
-                return getPopConstantCommands(index);
             case "pushlocal":
                 return getPushLocalCommands(index);
             case "poplocal":
@@ -55,7 +56,7 @@ public class AssemblyCommands {
             case "popstatic":
                 return getPopStaticCommands(index);
             case "pushtemp":
-                return getPushTemptCommands(index);
+                return getPushTempCommands(index);
             case "poptemp":
                 return getPopTempCommands(index);
             case "pushpointer0":
@@ -67,169 +68,284 @@ public class AssemblyCommands {
             case "poppointer1":
                 return getPushThatCommands(index);
         }
-        return null;
+        throw new Exception("Illegal command");
+    }
+
+    public String getPushPopCommands (String command) throws Exception {
+        switch (command) {
+            case "pushpointer0":
+                return getPushPointer0Commands();
+            case "poppointer0":
+                return getPopPointer0Commands();
+            case "pushpointer1":
+                return getPushPointer1Commands();
+            case "poppointer1":
+                return getPopPointer1Commands();
+        }
+        throw new Exception("Illegal command");
     }
 
     private String getPushConstantCommands (int index) {
-        return
-            "@" + index + "\n" +
-            "D=A\n" +                   //set value to given index
-            "@SP\n" +
-            "A=M\n" +                  // go to sp address
-            "M=D\n" +                  // put value in tha stack
-            "@SP\n" +                  // go to sp
-            "M=M+1\n";                  // increase sp by 1
-    }
-
-    private String getPopConstantCommands (int index) {
-        return
-                "@SP\n"+
-                "D=M\n"+
+        return  // get the value
                 "@" + index + "\n" +
-                "D=D+A\n" +                    // get value from given index
-                "@SP\n" +                   // go to sp
-                "M=M-1\n";                   // decrease sp value by 1;
+                "D=A\n" +
+                // set RAM[SP] = constant
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                // sp++
+                "@SP\n" +
+                "M=M+1\n";
     }
 
     private String getPushLocalCommands (int index) {
-        return
+        return  // addr = LCL + index
                 "@LCL\n" +
-                        "D=M\n" +                   // get LCL address
-                        "@" + index + "\n" +   // get index value
-                        "A=D+A\n" +                 // set address to relevant local address
-                        "D=M\n" +                // get value
-                        "@SP\n" +
-                        "A=M\n" +                // go to sp address
-                        "M=D\n" +                  // put value in the stack
-                        "@SP\n" +                  // go to sp
-                        "M=M+1\n";                // increase sp value by 1
+                "D=M\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
+
     }
 
     private String getPopLocalCommands (int index) {
-        return
+        return  // addr = LCL + index
                 "@LCL\n" +
-                "D=M\n" +                // get LCL address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant local address
-                "D=M\n" +                // get value
+                "D=M\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                 // decrease sp value by 1
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
     }
 
     private String getPushArgumentCommands (int index) {
-        return "@ARG\n" +
-                "D=M\n" +                // get ARG address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant ARG address
-                "D=M\n" +                // get value
+        return  // address = ARG + index
+                "@ARG\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
                 "@SP\n" +
-                "A=M\n" +                // go to sp address
-                "M=D\n" +                  // put value in the stack
-                "@SP\n" +                  // go to sp
-                "M=M+1\n";                 // increase sp value by 1
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
 
     }
 
     private String getPopArgumentCommands (int index) {
-        return "@ARG\n" +
-                "D=M\n" +                // get ARG address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant ARG address
-                "D=M\n" +                // get value
+        return // addr = ARG + index
+                "@ARG\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                 // decrease sp value by 1
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
     }
 
     private String getPushThisCommands (int index) {
-        return "@THIS\n" +
-                "D=M\n" +                // get THIS address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant THIS address
-                "D=M\n" +                // get value
+        return  // address = THIS + index
+                "@THIS\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
                 "@SP\n" +
-                "A=M\n" +                // go to sp address
-                "M=D\n" +                  // put value in the stack
-                "@SP\n" +                  // go to sp
-                "M=M+1\n";                 // increase sp value by 1
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
     }
 
     private String getPopThisCommands (int index) {
-        return "@THIS\n" +
-                "D=M\n" +                // get THIS address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant THIS address
-                "D=M\n" +                // get value
+        return  // addr = THIS + index
+                "@THIS\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                 // decrease sp value by 1
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
     }
 
     private String getPushThatCommands (int index) {
-        return "@THAT\n" +
-                "D=M\n" +                // get THAT address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant THAT address
-                "D=M\n" +                // get value
+        return  // addr = THAT + index
+                "@THAT\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
                 "@SP\n" +
-                "A=M\n" +                // go to sp address
-                "M=D\n" +                  // put value in the stack
-                "@SP\n" +                  // go to sp
-                "M=M+1\n";                 // increase sp value by 1
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
     }
 
     private String getPopThatCommands (int index) {
-        return "@THAT\n" +
-                "D=M\n" +                // get THAT address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant THAT address
-                "D=M\n" +                // get value
+        return  // addr = THAT + index
+                "@THAT\n" +
+                "D=M\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                 // decrease sp value by 1
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
     }
 
     private String getPushStaticCommands (int index) {
-        return "@16\n" +
-                "D=M\n" +                // get first static variable address
-                "@" + index + "\n" +    // get index value
-                "A=D+A\n" +              // set address to relevant static variable address
-                "D=M\n" +                // get value
+        return // addr = 16 + index
+                "@16\n" +
+                "D=A\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
                 "@SP\n" +
-                "A=M\n" +                // go to sp address
-                "M=D\n" +                  // put value in the stack
-                "@SP\n" +                  // go to sp
-                "M=M+1\n";                 // increase sp value by 1;
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
     }
 
     private String getPopStaticCommands (int index) {
-        return "@16\n" +
-                "D=M\n" +                    // get first static variable address
-                "@" + index + "\n" +        // get index value
-                "A=D+A\n" +                  // set address to relevant static variable address
-                "D=M\n" +                    // get value
+        return  // addr = 16 + index
+                "@16\n" +
+                "D=A\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                   // decrease sp value by 1;
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
     }
 
-    private String getPushTemptCommands (int index) {
-        return "@R5\n" +
-                "D=M\n" +                    // get first temp variable address
-                "@" + index + "\n" +        // get index value
-                "A=D+A\n" +                  // set address to relevant temp variable address
-                "D=M\n" +                    // get value
+    private String getPushTempCommands (int index) {
+        return  // addr = 5 + index
+                "@5\n" +
+                "D=A\n" +
+                "@" + index + "\n" +
+                "A=D+A\n" +
+                // RAM[SP] = RAM[addr]
+                "D=M\n" +
                 "@SP\n" +
-                "A=M\n" +                    // go to sp address
-                "M=D\n" +                    // put value in the stack
-                "@SP\n" +                    // go to sp
-                "M=M+1\n";                   // increase sp value by 1;
+                "A=M\n" +
+                "M=D\n" +
+                // SP++
+                "@SP\n" +
+                "M=M+1\n";
     }
 
     private String getPopTempCommands (int index) {
-        return "@R5\n" +
-                "D=M\n" +                    // get first static temp address
-                "@" + index + "\n" +        // get index value
-                "A=D+A\n" +                  // set address to relevant temp variable address
-                "D=M\n" +                    // get value
+        return  // addr = 5 + index
+                "@5\n" +
+                "D=A\n" +
+                "@" + index + "\n" +
+                "D=D+A\n" +
+                "@R13\n" +
+                "M=D\n" +
+                // SP--
                 "@SP\n" +
-                "M=M-1\n";                   // decrease sp value by 1;
+                "AM=M-1\n" +
+                // RAM[addr] = RAM[SP]
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";
+    }
+
+    private String getPushPointer0Commands () {
+        return  // get THIS value
+                "@THIS\n" +
+                "D=M\n" +
+                // RAM[SP] = THIS
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                //SP++
+                "@SP\n" +
+                "M=M+1\n";
+    }
+
+    private String getPopPointer0Commands () {
+        return  // THIS = RAM[SP]
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+                "@THIS\n" +
+                "M=D\n";
+    }
+
+    private String getPushPointer1Commands () {
+        return  // get THAT value
+                "@THAT\n" +
+                "D=M\n" +
+                // RAM[SP] = THIS
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                //SP++
+                "@SP\n" +
+                "M=M+1\n";
+    }
+
+    private String getPopPointer1Commands () {
+        return  // THAT = RAM[SP]
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+                "@THAT\n" +
+                "M=D\n";
     }
 
 

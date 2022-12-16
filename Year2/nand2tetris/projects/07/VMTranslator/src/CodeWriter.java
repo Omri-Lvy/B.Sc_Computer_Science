@@ -5,24 +5,20 @@ public class CodeWriter {
     private FileWriter outfile;
     private AssemblyCommands asmCommands = new AssemblyCommands();
 
-    private int lineNumber = 1;
-
     public CodeWriter(FileWriter outfile) throws IOException {
         this.outfile = outfile;
     }
 
-    public void writeArithmetic(String command) throws IOException {
+    public void writeArithmetic(String command) throws Exception {
         outfile.write(asmCommands.getArithmeticCommands(command));
     }
 
-    public void writePushPop(String command,String segment, int index) throws IOException {
+    public void writePushPop(String command,String segment, int index) throws Exception {
         if (segment.equals("pointer")){
-            outfile.write(asmCommands.getPushPopCommands(command+segment+index,index)+" //"+lineNumber+"\n");
-            lineNumber++;
+            outfile.write(asmCommands.getPushPopCommands(command+segment+index));
         }
         else {
-            outfile.write(asmCommands.getPushPopCommands(command+segment,index)+" //"+lineNumber+"\n");
-            lineNumber++;
+            outfile.write(asmCommands.getPushPopCommands(command+segment,index));
         }
     }
 

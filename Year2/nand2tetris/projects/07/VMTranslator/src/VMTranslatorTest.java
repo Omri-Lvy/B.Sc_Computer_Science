@@ -46,7 +46,7 @@ public class VMTranslatorTest {
     }
 
     @Test
-    public void writeArithmeticTest() throws IOException {
+    public void writeArithmeticTest() throws Exception {
         parser.advance();
         while (!Objects.equals(parser.commandType(), InstructionsEnum.C_ARITHMETIC.getType())) {
             parser.advance();
@@ -56,7 +56,7 @@ public class VMTranslatorTest {
     }
 
     @Test
-    public void commandWriteTest() throws IOException {
+    public void commandWriteTest() throws Exception {
         while (parser.hasMoreLine()) {
             parser.advance();
             if(parser.commandType() == InstructionsEnum.C_ARITHMETIC.getType()) {
