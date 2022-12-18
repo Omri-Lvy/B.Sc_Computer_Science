@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 public class VMTranslator {
 
@@ -8,6 +7,7 @@ public class VMTranslator {
         File inputFile = new File(args[0]);
         FileWriter outputFile = new FileWriter(args[0].replace(".vm", ".asm"),false);
         CodeWriter codeWriter = new CodeWriter(outputFile);
+        codeWriter.setFileName(inputFile.getName().replace(".vm",""));
         Parser parser = new Parser(inputFile);
         while (parser.hasMoreLine()) {
             parser.advance();

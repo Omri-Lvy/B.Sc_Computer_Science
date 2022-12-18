@@ -30,6 +30,16 @@ public class AssemblyCommands {
         throw new Exception("Illegal command");
     }
 
+    public String getPushPopCommands (String command, int index, String fileName) throws Exception {
+        // return the push/pop command corresponding assembly code
+        switch (command) {
+            case "pushstatic":
+                return getPushStaticCommands(index,fileName);
+            case "popstatic":
+                return getPopStaticCommands(index,fileName);
+        }
+        throw new Exception("Illegal command");
+    }
     public String getPushPopCommands (String command, int index) throws Exception {
         // return the push/pop command corresponding assembly code
         switch (command) {
@@ -51,10 +61,6 @@ public class AssemblyCommands {
                 return getPushThatCommands(index);
             case "popthat":
                 return getPopThatCommands(index);
-            case "pushstatic":
-                return getPushStaticCommands(index);
-            case "popstatic":
-                return getPopStaticCommands(index);
             case "pushtemp":
                 return getPushTempCommands(index);
             case "poptemp":
@@ -236,12 +242,9 @@ public class AssemblyCommands {
                 "M=D\n";
     }
 
-    private String getPushStaticCommands (int index) {
-        return // addr = 16 + index
-                "@16\n" +
-                "D=A\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
+    private String getPushStaticCommands (int index, String fileName) {
+        return // addr = fileName.index
+                "@"+ fileName + "." + index + "\n" +
                 // RAM[SP] = RAM[addr]
                 "D=M\n" +
                 "@SP\n" +
@@ -252,21 +255,13 @@ public class AssemblyCommands {
                 "M=M+1\n";
     }
 
-    private String getPopStaticCommands (int index) {
-        return  // addr = 16 + index
-                "@16\n" +
-                "D=A\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
+    private String getPopStaticCommands (int index, String fileName) {
+        return  // SP--
                 "@SP\n" +
                 "AM=M-1\n" +
                 // RAM[addr] = RAM[SP]
                 "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
+                "@"+ fileName + "." + index + "\n" +
                 "M=D\n";
     }
 
@@ -379,12 +374,12 @@ public class AssemblyCommands {
                 "A=A-1\n" +     // go to second item in the stack
                 "D=M-D\n" +     // subtract second item value from D
                 "M=-1\n" +      // tentatively set result to true
-                "@jumpTo" + labelNum + "\n" +   // set label address to jump to if x == y
+                "@JUMPTO" + labelNum + "\n" +   // set label address to jump to if x == y
                 "D;JEQ\n" +     // jump if equal
                 "@SP\n" +       // go back to sp address
                 "A=M-1\n" +     // go to first stack item
                 "M=0\n" +       // put result in stack
-                "(jumpTo" + labelNum + ")\n";  // label to jump to if x == y
+                "(JUMPTO" + labelNum + ")\n";  // label to jump to if x == y
     }
 
     private String getGtCommands () {
@@ -395,12 +390,12 @@ public class AssemblyCommands {
                 "A=A-1\n" +     // go to second item in the stack
                 "D=M-D\n" +     // subtract second item value from D
                 "M=-1\n" +      // tentatively set result to true
-                "@jumpTo" + labelNum + "\n" +   // set label address to jump to if x > y
+                "@JUMPTO" + labelNum + "\n" +   // set label address to jump to if x > y
                 "D;JGT\n" +     // jump if equal
                 "@SP\n" +       // go back to sp address
                 "A=M-1\n" +     // go to first stack item
                 "M=0\n" +       // put result in stack
-                "(jumpTo" + labelNum + ")\n";   // label to jump to if x > y      // add second item value to D and put result in stack
+                "(JUMPTO" + labelNum + ")\n";   // label to jump to if x > y      // add second item value to D and put result in stack
     }
 
     private String getLtCommands () {
@@ -411,12 +406,12 @@ public class AssemblyCommands {
                 "A=A-1\n" +     // go to second item in the stack
                 "D=M-D\n" +     // subtract second item value from D
                 "M=-1\n" +      // tentatively set result to true
-                "@jumpTo" + labelNum + "\n" +   // set label address to jump to if x < y
+                "@JUMPTO" + labelNum + "\n" +   // set label address to jump to if x < y
                 "D;JLT\n" +     // jump if equal
                 "@SP\n" +       // go back to sp address
                 "A=M-1\n" +     // go to first stack item
                 "M=0\n" +       // put result in stack
-                "(jumpTo" + labelNum + ")\n";   // label to jump to if x < y
+                "(JUMPTO" + labelNum + ")\n";   // label to jump to if x < y
     }
 
     private String getAndCommands () {
