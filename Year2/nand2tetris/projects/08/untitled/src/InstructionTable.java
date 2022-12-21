@@ -19,8 +19,8 @@ public class InstructionTable {
         instructionsTable.put("label", InstructionsEnum.C_LABEL);
         instructionsTable.put("goto", InstructionsEnum.C_GOTO);
         instructionsTable.put("if-goto", InstructionsEnum.C_IF);
-        instructionsTable.put("Function", InstructionsEnum.C_FUNCTION);
-        instructionsTable.put("Call", InstructionsEnum.C_CALL);
+        instructionsTable.put("function", InstructionsEnum.C_FUNCTION);
+        instructionsTable.put("call", InstructionsEnum.C_CALL);
         instructionsTable.put("return", InstructionsEnum.C_RETURN);
     }
 

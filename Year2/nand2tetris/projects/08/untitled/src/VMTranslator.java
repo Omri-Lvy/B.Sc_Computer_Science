@@ -4,16 +4,18 @@ import java.io.FileWriter;
 
 public class VMTranslator {
 
-
     public static void main (String[] args) throws Exception {
         // Filtering only .vm files from given directory
         FileFilter fileFilter = pathname -> pathname.getName().endsWith(".vm");
         // insert all given vm files into array
         File[] filesList = new File(args[0]).isDirectory() ? new File(args[0]).listFiles(fileFilter) : new File[]{ new File(args[0]) };
+        FileWriter outputFile = new FileWriter(new File(args[0]).isDirectory() ?
+                args[0] + "/" + new File(args[0]).getName() + ".asm" :
+                args[0].replace(".vm", ".asm"), false);
+        CodeWriter codeWriter = new CodeWriter(outputFile);
+        codeWriter.writeInit();
         // Translate all the given vm files
         for (File file : filesList) {
-            FileWriter outputFile = new FileWriter(file.getCanonicalPath().replace(".vm", ".asm"), false);
-            CodeWriter codeWriter = new CodeWriter(outputFile);
             codeWriter.setFileName(file.getName().replace(".vm", ""));
             Parser parser = new Parser(file);
             while (parser.hasMoreLine()) {
@@ -30,9 +32,15 @@ public class VMTranslator {
                     codeWriter.writeLabel(parser.arg1());
                 } else if (parser.commandType() == InstructionsEnum.C_GOTO.getType()) {
                     codeWriter.writeGoto(parser.arg1());
+                } else if (parser.commandType() == InstructionsEnum.C_FUNCTION.getType()) {
+                    codeWriter.writeFunction(parser.arg1(), parser.arg2());
+                } else if (parser.commandType() == InstructionsEnum.C_CALL.getType()) {
+                    codeWriter.writeCall(parser.arg1(), parser.arg2());
+                } else if (parser.commandType() == InstructionsEnum.C_RETURN.getType()) {
+                    codeWriter.writeReturn();
                 }
             }
-            codeWriter.close();
         }
+        codeWriter.close();
     }
 }

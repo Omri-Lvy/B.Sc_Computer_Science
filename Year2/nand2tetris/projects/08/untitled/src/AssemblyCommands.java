@@ -9,8 +9,7 @@ public class AssemblyCommands {
         return "@256\n" +
                 "D=A\n" +
                 "@SP\n" +
-                "M=D\n" +
-                "Sys.init, 0\n";
+                "M=D\n";
     }
 
     public String getArithmeticCommands (String command) throws Exception {
@@ -106,7 +105,7 @@ public class AssemblyCommands {
 
     public String getGotoCommand (String label) {
         return "@" + label + "\n" +
-                "D;JMP\n";
+                "0;JMP\n";
     }
 
     public String getIfCommand (String label) {
@@ -117,47 +116,115 @@ public class AssemblyCommands {
                 "D;JNE\n";
     }
 
-    public String getCallCommand (String label) {
+    public String getCallCommand (String label,String returnLabel, int nArgs) {
         return  // push return address
-                "@" + label + "\n" +
-                "D=A\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                "@SP\n" +
-                "M=M+1\n"+
-                // save function local
+                "@" + returnLabel + "\n" +
+                        "D=A\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        "@SP\n" +
+                        "M=M+1\n" +
+                        // Saves the caller’s LCL
+                        "@LCL\n" +
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        "@SP\n" +
+                        "M=M+1\n" +
+                        // Saves the caller’s ARG
+                        "@ARG\n" +
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        "@SP\n" +
+                        "M=M+1\n" +
+                        // Saves the caller’s THIS
+                        "@THIS\n" +
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        "@SP\n" +
+                        "M=M+1\n" +
+                        // Saves the caller’s THAT
+                        "@THAT\n" +
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        "@SP\n" +
+                        "M=M+1\n" +
+                        // Repositions ARG
+                        "@SP\n"+
+                        "D=M\n"+
+                        "@" + nArgs + "\n" +
+                        "D=D-A\n" +
+                        "@5\n" +
+                        "D=D-A\n"+
+                        "@ARG\n" +
+                        "M=D\n" +
+                        // Repositions LCL
+                        "@SP\n" +
+                        "D=M\n" +
+                        "@LCL\n" +
+                        "M=D\n" +
+                        getGotoCommand(label)+
+                        "(" + returnLabel + ")\n";
+    }
+
+    public String getReturnCommand(){
+        return  // gets the address at the frame’s end
                 "@LCL\n"+
                 "D=M\n"+
-                "@SP\n"+
-                "A=M\n"+
+                "@END_FRAME\n"+
                 "M=D\n"+
-                "@SP\n"+
-                "M=M+1\n"+
-                // save function argument
-                "@ARG\n"+
+                // gets the return address
+                "@END_FRAME\n" +
+                "D=M\n" +
+                "@5\n"+
+                "A=D-A\n"+
                 "D=M\n"+
-                "@SP\n"+
-                "A=M\n"+
+                "@RET_ADDR\n"+
                 "M=D\n"+
-                "@SP\n"+
-                "M=M+1\n"+
-                // save function this
-                "@THIS\n"+
-                "D=M\n"+
-                "@SP\n"+
-                "A=M\n"+
-                "M=D\n"+
-                "@SP\n"+
-                "M=M+1\n"+
-                // save function that
+                // puts the return value for the caller
+                getPopArgumentCommands(0) +
+                // repositions SP
+                "@ARG\n" +
+                "D=M\n" +
+                "@SP\n" +
+                "M=D+1\n" +
+                // restores THAT
+                "@END_FRAME\n" +
+                "D=M-1\n"+
                 "@THAT\n"+
-                "D=M\n"+
-                "@SP\n"+
-                "A=M\n"+
                 "M=D\n"+
-                "@SP\n"+
-                "M=M+1\n";
+                // restores THIS
+                "@END_FRAME\n" +
+                "D=M\n" +
+                "@2\n"+
+                "D=D-A\n"+
+                "@THIS\n" +
+                "M=D\n" +
+                // restores ARG
+                "@END_FRAME\n" +
+                "D=M\n" +
+                "@3\n"+
+                "D=D-A\n"+
+                "@ARG\n" +
+                "M=D\n" +
+                // restores LCL
+                "@END_FRAME\n" +
+                "D=M\n" +
+                "@4\n"+
+                "D=D-A\n"+
+                "@LCL\n" +
+                "M=D\n" +
+                "@RET_ADDR\n"+
+                "A=M\n"+
+                "0;JMP\n";
     }
 
 
@@ -177,17 +244,17 @@ public class AssemblyCommands {
     private String getPushLocalCommands (int index) {
         return  // addr = LCL + index
                 "@LCL\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "A=D+A\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
 
     }
 

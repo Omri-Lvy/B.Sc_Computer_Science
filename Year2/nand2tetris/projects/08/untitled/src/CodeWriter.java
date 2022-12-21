@@ -10,12 +10,17 @@ public class CodeWriter {
 
     public CodeWriter (FileWriter outfile) throws IOException {
         this.outfile = outfile;
-        outfile.write(asmCommands.getInit());
     }
 
-    public void setFileName (String fileName) {
+    public void writeInit() throws Exception {
+        outfile.write(asmCommands.getInit());
+        writeCall("Sys.init", 0);
+    }
+
+    public void setFileName (String fileName) throws Exception {
         this.fileName = fileName;
         System.out.println("Translating " + fileName);
+        writeInit();
     }
 
     public void writeArithmetic (String command) throws Exception {
@@ -33,31 +38,32 @@ public class CodeWriter {
     }
 
     public void writeLabel (String label) throws IOException {
-        outfile.write(asmCommands.getLabelCommand(functionName+"$"+label));
+        outfile.write(asmCommands.getLabelCommand(functionName != "" ? functionName + "$" + label : label));
     }
 
     public void writeGoto (String label) throws IOException {
-        outfile.write(asmCommands.getGotoCommand(functionName+"$"+label));
+        outfile.write(asmCommands.getGotoCommand(functionName != "" ? functionName + "$" + label : label));
     }
 
     public void writeIf (String label) throws IOException {
-        outfile.write(asmCommands.getIfCommand(functionName+"$"+label));
+        outfile.write(asmCommands.getIfCommand(functionName != "" ? functionName + "$" + label : label));
     }
 
-    public void writeFunction (String functionName, int nArgs) throws Exception {
+    public void writeFunction (String functionName, int nVars) throws Exception {
         this.functionName = functionName;
-        this.returnIndex = 0;
         outfile.write(asmCommands.getLabelCommand(functionName));
-        for (int i = 0; i < nArgs; i++) {
+        for (int i = 0; i < nVars; i++) {
             writePushPop("push", "constant", 0);
         }
     }
 
     public void writeCall (String functionName, int nArgs) throws IOException {
-        outfile.write(asmCommands.getCallCommand(functionName + "$ret." + returnIndex++));
+        this.returnIndex = 0;
+        outfile.write(asmCommands.getCallCommand(functionName,functionName + "$ret." + returnIndex++,nArgs));
     }
 
-    public void writeReturn () {
+    public void writeReturn () throws IOException {
+        outfile.write(asmCommands.getReturnCommand());
     }
 
     public void close () throws IOException {
