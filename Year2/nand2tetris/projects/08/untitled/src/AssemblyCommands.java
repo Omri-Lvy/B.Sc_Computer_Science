@@ -5,6 +5,14 @@ public class AssemblyCommands {
     public AssemblyCommands () {
     }
 
+    public String getInit () {
+        return "@256\n" +
+                "D=A\n" +
+                "@SP\n" +
+                "M=D\n" +
+                "Sys.init, 0\n";
+    }
+
     public String getArithmeticCommands (String command) throws Exception {
         // return the arithmetic command corresponding assembly code
         switch (command) {
@@ -34,12 +42,13 @@ public class AssemblyCommands {
         // return the push/pop command corresponding assembly code
         switch (command) {
             case "pushstatic":
-                return getPushStaticCommands(index,fileName);
+                return getPushStaticCommands(index, fileName);
             case "popstatic":
-                return getPopStaticCommands(index,fileName);
+                return getPopStaticCommands(index, fileName);
         }
         throw new Exception("Illegal command");
     }
+
     public String getPushPopCommands (String command, int index) throws Exception {
         // return the push/pop command corresponding assembly code
         switch (command) {
@@ -91,17 +100,78 @@ public class AssemblyCommands {
         throw new Exception("Illegal command");
     }
 
-    private String getPushConstantCommands (int index) {
-        return  // get the value
-                "@" + index + "\n" +
+    public String getLabelCommand (String label) {
+        return "(" + label + ")\n";
+    }
+
+    public String getGotoCommand (String label) {
+        return "@" + label + "\n" +
+                "D;JMP\n";
+    }
+
+    public String getIfCommand (String label) {
+        return "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+                "@" + label + "\n" +
+                "D;JNE\n";
+    }
+
+    public String getCallCommand (String label) {
+        return  // push return address
+                "@" + label + "\n" +
                 "D=A\n" +
-                // set RAM[SP] = constant
                 "@SP\n" +
                 "A=M\n" +
                 "M=D\n" +
-                // sp++
                 "@SP\n" +
+                "M=M+1\n"+
+                // save function local
+                "@LCL\n"+
+                "D=M\n"+
+                "@SP\n"+
+                "A=M\n"+
+                "M=D\n"+
+                "@SP\n"+
+                "M=M+1\n"+
+                // save function argument
+                "@ARG\n"+
+                "D=M\n"+
+                "@SP\n"+
+                "A=M\n"+
+                "M=D\n"+
+                "@SP\n"+
+                "M=M+1\n"+
+                // save function this
+                "@THIS\n"+
+                "D=M\n"+
+                "@SP\n"+
+                "A=M\n"+
+                "M=D\n"+
+                "@SP\n"+
+                "M=M+1\n"+
+                // save function that
+                "@THAT\n"+
+                "D=M\n"+
+                "@SP\n"+
+                "A=M\n"+
+                "M=D\n"+
+                "@SP\n"+
                 "M=M+1\n";
+    }
+
+
+    private String getPushConstantCommands (int index) {
+        return  // get the value
+                "@" + index + "\n" +
+                        "D=A\n" +
+                        // set RAM[SP] = constant
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // sp++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPushLocalCommands (int index) {
@@ -124,225 +194,224 @@ public class AssemblyCommands {
     private String getPopLocalCommands (int index) {
         return  // addr = LCL + index
                 "@LCL\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
-                "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
-                "M=D\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "D=D+A\n" +
+                        "@R13\n" +
+                        "M=D\n" +
+                        // SP--
+                        "@SP\n" +
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@R13\n" +
+                        "A=M\n" +
+                        "M=D\n";
     }
 
     private String getPushArgumentCommands (int index) {
         return  // address = ARG + index
                 "@ARG\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "A=D+A\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
 
     }
 
     private String getPopArgumentCommands (int index) {
         return // addr = ARG + index
                 "@ARG\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
-                "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
-                "M=D\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "D=D+A\n" +
+                        "@R13\n" +
+                        "M=D\n" +
+                        // SP--
+                        "@SP\n" +
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@R13\n" +
+                        "A=M\n" +
+                        "M=D\n";
     }
 
     private String getPushThisCommands (int index) {
         return  // address = THIS + index
                 "@THIS\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "A=D+A\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopThisCommands (int index) {
         return  // addr = THIS + index
                 "@THIS\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
-                "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
-                "M=D\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "D=D+A\n" +
+                        "@R13\n" +
+                        "M=D\n" +
+                        // SP--
+                        "@SP\n" +
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@R13\n" +
+                        "A=M\n" +
+                        "M=D\n";
     }
 
     private String getPushThatCommands (int index) {
         return  // addr = THAT + index
                 "@THAT\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "A=D+A\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopThatCommands (int index) {
         return  // addr = THAT + index
                 "@THAT\n" +
-                "D=M\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
-                "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
-                "M=D\n";
+                        "D=M\n" +
+                        "@" + index + "\n" +
+                        "D=D+A\n" +
+                        "@R13\n" +
+                        "M=D\n" +
+                        // SP--
+                        "@SP\n" +
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@R13\n" +
+                        "A=M\n" +
+                        "M=D\n";
     }
 
     private String getPushStaticCommands (int index, String fileName) {
         return // addr = fileName.index
-                "@"+ fileName + "." + index + "\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                "@" + fileName + "." + index + "\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopStaticCommands (int index, String fileName) {
         return  // SP--
                 "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@"+ fileName + "." + index + "\n" +
-                "M=D\n";
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@" + fileName + "." + index + "\n" +
+                        "M=D\n";
     }
 
     private String getPushTempCommands (int index) {
         return  // addr = 5 + index
                 "@5\n" +
-                "D=A\n" +
-                "@" + index + "\n" +
-                "A=D+A\n" +
-                // RAM[SP] = RAM[addr]
-                "D=M\n" +
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                // SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=A\n" +
+                        "@" + index + "\n" +
+                        "A=D+A\n" +
+                        // RAM[SP] = RAM[addr]
+                        "D=M\n" +
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        // SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopTempCommands (int index) {
         return  // addr = 5 + index
                 "@5\n" +
-                "D=A\n" +
-                "@" + index + "\n" +
-                "D=D+A\n" +
-                "@R13\n" +
-                "M=D\n" +
-                // SP--
-                "@SP\n" +
-                "AM=M-1\n" +
-                // RAM[addr] = RAM[SP]
-                "D=M\n" +
-                "@R13\n" +
-                "A=M\n" +
-                "M=D\n";
+                        "D=A\n" +
+                        "@" + index + "\n" +
+                        "D=D+A\n" +
+                        "@R13\n" +
+                        "M=D\n" +
+                        // SP--
+                        "@SP\n" +
+                        "AM=M-1\n" +
+                        // RAM[addr] = RAM[SP]
+                        "D=M\n" +
+                        "@R13\n" +
+                        "A=M\n" +
+                        "M=D\n";
     }
 
     private String getPushPointer0Commands () {
         return  // get THIS value
                 "@THIS\n" +
-                "D=M\n" +
-                // RAM[SP] = THIS
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                //SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        // RAM[SP] = THIS
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        //SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopPointer0Commands () {
         return  // THIS = RAM[SP]
                 "@SP\n" +
-                "AM=M-1\n" +
-                "D=M\n" +
-                "@THIS\n" +
-                "M=D\n";
+                        "AM=M-1\n" +
+                        "D=M\n" +
+                        "@THIS\n" +
+                        "M=D\n";
     }
 
     private String getPushPointer1Commands () {
         return  // get THAT value
                 "@THAT\n" +
-                "D=M\n" +
-                // RAM[SP] = THIS
-                "@SP\n" +
-                "A=M\n" +
-                "M=D\n" +
-                //SP++
-                "@SP\n" +
-                "M=M+1\n";
+                        "D=M\n" +
+                        // RAM[SP] = THIS
+                        "@SP\n" +
+                        "A=M\n" +
+                        "M=D\n" +
+                        //SP++
+                        "@SP\n" +
+                        "M=M+1\n";
     }
 
     private String getPopPointer1Commands () {
         return  // THAT = RAM[SP]
                 "@SP\n" +
-                "AM=M-1\n" +
-                "D=M\n" +
-                "@THAT\n" +
-                "M=D\n";
+                        "AM=M-1\n" +
+                        "D=M\n" +
+                        "@THAT\n" +
+                        "M=D\n";
     }
-
 
     private String getAddCommands () {
         return "@SP\n" +
@@ -435,5 +504,6 @@ public class AssemblyCommands {
                 "A=M-1\n" +     // go to first item in the stack
                 "M=!M\n";        // set value to !M
     }
+
 
 }
