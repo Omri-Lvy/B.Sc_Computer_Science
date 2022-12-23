@@ -53,4 +53,8 @@ public class Parser {
         }
         return null;
     }
+
+    public String getCurrentInstruction(){
+        return currentInstruction;
+    }
 }

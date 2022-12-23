@@ -118,7 +118,7 @@ public class AssemblyCommands {
 
     public String getCallCommand (String label,String returnLabel, int nArgs) {
         return  // push return address
-                "@" + returnLabel + "\n" +
+                        "@" + returnLabel + "\n" +
                         "D=A\n" +
                         "@SP\n" +
                         "A=M\n" +
@@ -160,9 +160,9 @@ public class AssemblyCommands {
                         // Repositions ARG
                         "@SP\n"+
                         "D=M\n"+
-                        "@" + nArgs + "\n" +
-                        "D=D-A\n" +
                         "@5\n" +
+                        "D=D-A\n" +
+                        "@" + nArgs + "\n" +
                         "D=D-A\n"+
                         "@ARG\n" +
                         "M=D\n" +
@@ -182,46 +182,47 @@ public class AssemblyCommands {
                 "@END_FRAME\n"+
                 "M=D\n"+
                 // gets the return address
-                "@END_FRAME\n" +
-                "D=M\n" +
                 "@5\n"+
                 "A=D-A\n"+
                 "D=M\n"+
                 "@RET_ADDR\n"+
                 "M=D\n"+
                 // puts the return value for the caller
-                getPopArgumentCommands(0) +
+                getPopArgumentCommands(0)+
                 // repositions SP
-                "@ARG\n" +
-                "D=M\n" +
-                "@SP\n" +
-                "M=D+1\n" +
+                "@ARG\n"+
+                "D=M\n"+
+                "@SP\n"+
+                "M=D+1\n"+
                 // restores THAT
-                "@END_FRAME\n" +
+                "@END_FRAME\n"+
                 "D=M-1\n"+
+                "AM=D\n"+
+                "D=M\n"+
                 "@THAT\n"+
                 "M=D\n"+
                 // restores THIS
-                "@END_FRAME\n" +
-                "D=M\n" +
-                "@2\n"+
-                "D=D-A\n"+
-                "@THIS\n" +
-                "M=D\n" +
+                "@END_FRAME\n"+
+                "D=M-1\n"+
+                "AM=D\n"+
+                "D=M\n"+
+                "@THIS\n"+
+                "M=D\n"+
                 // restores ARG
-                "@END_FRAME\n" +
-                "D=M\n" +
-                "@3\n"+
-                "D=D-A\n"+
-                "@ARG\n" +
-                "M=D\n" +
+                "@END_FRAME\n"+
+                "D=M-1\n"+
+                "AM=D\n"+
+                "D=M\n"+
+                "@ARG\n"+
+                "M=D\n"+
                 // restores LCL
-                "@END_FRAME\n" +
-                "D=M\n" +
-                "@4\n"+
-                "D=D-A\n"+
-                "@LCL\n" +
-                "M=D\n" +
+                "@END_FRAME\n"+
+                "D=M-1\n"+
+                "AM=D\n"+
+                "D=M\n"+
+                "@LCL\n"+
+                "M=D\n"+
+                // jumps to the return address
                 "@RET_ADDR\n"+
                 "A=M\n"+
                 "0;JMP\n";

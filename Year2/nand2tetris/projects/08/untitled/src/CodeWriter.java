@@ -20,7 +20,6 @@ public class CodeWriter {
     public void setFileName (String fileName) throws Exception {
         this.fileName = fileName;
         System.out.println("Translating " + fileName);
-        writeInit();
     }
 
     public void writeArithmetic (String command) throws Exception {
@@ -58,8 +57,8 @@ public class CodeWriter {
     }
 
     public void writeCall (String functionName, int nArgs) throws IOException {
-        this.returnIndex = 0;
-        outfile.write(asmCommands.getCallCommand(functionName,functionName + "$ret." + returnIndex++,nArgs));
+        outfile.write(asmCommands.getCallCommand(functionName,functionName + "$ret." + returnIndex,nArgs));
+        returnIndex++;
     }
 
     public void writeReturn () throws IOException {

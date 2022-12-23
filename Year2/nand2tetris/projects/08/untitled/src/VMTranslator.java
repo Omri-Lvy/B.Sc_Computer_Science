@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileWriter;
+import java.util.Arrays;
 
 public class VMTranslator {
 
@@ -13,7 +14,9 @@ public class VMTranslator {
                 args[0] + "/" + new File(args[0]).getName() + ".asm" :
                 args[0].replace(".vm", ".asm"), false);
         CodeWriter codeWriter = new CodeWriter(outputFile);
-        codeWriter.writeInit();
+        if (new File(args[0]).isDirectory() && new File(args[0]+"/Sys.vm").exists()){
+            codeWriter.writeInit();
+        }
         // Translate all the given vm files
         for (File file : filesList) {
             codeWriter.setFileName(file.getName().replace(".vm", ""));
