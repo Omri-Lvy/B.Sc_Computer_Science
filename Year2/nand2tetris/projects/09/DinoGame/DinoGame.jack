@@ -2,9 +2,11 @@
 class DinoGame {
 
     field Dino dino;
+    field Cactus cactus;
 
     constructor DinoGame new() {
         let dino = Dino.new();
+        let cactus = Cactus.new(0, 0, 5);
         return this;
     }
 

@@ -1,0 +1,85 @@
+class Cactus {
+
+   field int x, y; // screen location of the cactus's top-left corner
+   field int size; // length of this cactus, in pixels
+   field Memory memAddress;
+
+   /** Constructs a new cactus with a given location and size. */
+   constructor Cactus new(int Ax, int Ay, int Asize) {
+      let x = Ax;
+      let y = Ay;
+      let size = Asize;
+      do draw();
+      return this;
+   }
+
+   /** Disposes this cactus. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Draws the cactus on the screen. */
+   method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + size, y + size);
+
+        // let memAddress = 16384 + 7423;
+        // do Memory.poke(memAddress+0, 0);
+        // do Memory.poke(memAddress+32, 0);
+        // do Memory.poke(memAddress+64, 0);
+        // do Memory.poke(memAddress+96, 0);
+        // do Memory.poke(memAddress+128, 0);
+        // do Memory.poke(memAddress+160, 0);
+        // do Memory.poke(memAddress+192, 0);
+        // do Memory.poke(memAddress+224, 768);
+        // do Memory.poke(memAddress+256, 768);
+        // do Memory.poke(memAddress+288, 800);
+        // do Memory.poke(memAddress+320, 4896);
+        // do Memory.poke(memAddress+352, 5088);
+        // do Memory.poke(memAddress+384, 7936);
+        // do Memory.poke(memAddress+416, 768);
+        // do Memory.poke(memAddress+448, 768);
+        // do Memory.poke(memAddress+480, 768);
+        return;
+   }
+
+   /** Erases the cactus from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      return;
+   }
+
+    /** Increments the cactus size by 2 pixels. */
+   method void incSize() {
+      if (((y + size) < 254) & ((x + size) < 510)) {
+         do erase();
+         let size = size + 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Decrements the cactus size by 2 pixels. */
+   method void decSize() {
+      if (size > 2) {
+         do erase();
+         let size = size - 2;
+         do draw();
+      }
+      return;
+   }
+
+   /** Moves the cactus left by 2 pixels. */
+   method void moveLeft() {
+      if (x > 1) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+         let x = x - 2;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, y, x + 1, y + size);
+      }
+      return;
+   }
+}
