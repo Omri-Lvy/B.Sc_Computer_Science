@@ -1,0 +1,23 @@
+class Dino {
+    
+    field int x, y; // screen location of the dino's top-left corner
+    field Memory memAddress; // memory address
+
+    constructor Dino new() {
+        do draw();
+        return this;
+    }
+
+
+    method void dispose () {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        // each pixel is of size 5*5
+        do Screen.setColor(true);
+        do Screen.drawRectangle(20, 230, 20, 235);
+	    return;
+    }
+}
