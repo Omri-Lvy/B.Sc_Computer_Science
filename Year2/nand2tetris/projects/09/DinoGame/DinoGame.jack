@@ -2,24 +2,43 @@
 class DinoGame {
 
     field Dino dino;
-    field Cactus cactus;
+    field int direction;
 
     constructor DinoGame new() {
         let dino = Dino.new();
-        let cactus = Cactus.new(0, 0, 5);
+        let direction = 0;
         return this;
     }
 
-    method void run () {
-        var char key;
-        var boolean exit;
-        let exit = false;
-        while (~exit) {
-            // waits for a key to be pressed
-            if (key = 81)  { let exit = true; }     // q key
-        } 
-        return;
-    }
+    method void run() {
+      var char key;  // the key currently pressed by the user
+      var boolean exit;
+      let exit = false;
+      
+      while (~exit) {
+         // waits for a key to be pressed
+         while (key = 0) {
+            let key = Keyboard.keyPressed();
+            if (direction = 1) { 
+                do dino.jump(); 
+            }
+            let direction = 0;
+         }
+         if (key = 81)  { let exit = true; }     // q key
+         if (key = 131) { let direction = 1; }   // up arrow
+         if (key = 32) { let direction = 1; }   // space key
+      
+         // waits for the key to be released
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            if (direction = 1) { 
+                do dino.jump(); 
+            }
+            let direction = 0;
+         }
+     } // while
+     return;
+   }
 
     method void dispose() {
       do Memory.deAlloc(this);

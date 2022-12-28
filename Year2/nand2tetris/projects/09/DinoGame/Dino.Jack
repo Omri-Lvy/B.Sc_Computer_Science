@@ -1,10 +1,11 @@
 class Dino {
     
-    field int x, y; // screen location of the dino's top-left corner
-    field Memory memAddress; // memory address
+    field int yPos;
+    field int y;
 
     constructor Dino new() {
         do draw();
+        let y = 0;
         return this;
     }
 
@@ -17,7 +18,170 @@ class Dino {
     method void draw() {
         // each pixel is of size 5*5
         do Screen.setColor(true);
-        do Screen.drawRectangle(20, 230, 20, 235);
+        do Screen.drawRectangle(45, 230, 55, 235);
+        do Screen.drawRectangle(70, 230, 80, 235);
+        do Screen.drawRectangle(45, 225, 50, 230);
+        do Screen.drawRectangle(70, 225, 75, 230);
+        do Screen.drawRectangle(45, 220, 50, 225);
+        do Screen.drawRectangle(70, 220, 75, 225);
+        do Screen.drawRectangle(45, 215, 60, 220);
+        do Screen.drawRectangle(65, 215, 75, 220);
+        do Screen.drawRectangle(40, 210, 80, 215);
+        do Screen.drawRectangle(35, 205, 85, 210);
+        do Screen.drawRectangle(30, 200, 85, 205);
+        do Screen.drawRectangle(25, 195, 85, 200);
+        do Screen.drawRectangle(90, 195, 95, 200);
+        do Screen.drawRectangle(20, 190, 35, 195);
+        do Screen.drawRectangle(40, 190, 95, 195);
+        do Screen.drawRectangle(15, 185, 30, 190);
+        do Screen.drawRectangle(45, 185, 75, 190);
+        do Screen.drawRectangle(15, 180, 25, 185);
+        do Screen.drawRectangle(50, 180, 75, 185);
+        do Screen.drawRectangle(15, 175, 20, 180);
+        do Screen.drawRectangle(55, 175, 90, 180);
+        do Screen.drawRectangle(55, 170, 80, 175);
+        do Screen.drawRectangle(55, 165, 95, 170);
+        do Screen.drawRectangle(55, 160, 95, 165);
+        do Screen.drawRectangle(60, 155, 70, 160);
+        do Screen.drawRectangle(75, 155, 95, 160);
+        do Screen.drawRectangle(65, 150, 90, 155);
 	    return;
     }
+
+    method void jump() {
+        while (y < 90)
+        {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(45, 230-y, 55, 235);
+            do Screen.drawRectangle(70, 230-y, 80, 235);
+            do Screen.drawRectangle(45, 225-y, 50, 230);
+            do Screen.drawRectangle(70, 225-y, 75, 230);
+            do Screen.drawRectangle(45, 220-y, 50, 225);
+            do Screen.drawRectangle(70, 220-y, 75, 225);
+            do Screen.drawRectangle(45, 215-y, 60, 220);
+            do Screen.drawRectangle(65, 215-y, 75, 220);
+            do Screen.drawRectangle(40, 210-y, 80, 215);
+            do Screen.drawRectangle(35, 205-y, 85, 210);
+            do Screen.drawRectangle(30, 200-y, 85, 205);
+            do Screen.drawRectangle(25, 195-y, 85, 200);
+            do Screen.drawRectangle(90, 195-y, 95, 200);
+            do Screen.drawRectangle(20, 190-y, 35, 195);
+            do Screen.drawRectangle(40, 190-y, 95, 195);
+            do Screen.drawRectangle(15, 185-y, 30, 190);
+            do Screen.drawRectangle(45, 185-y, 75, 190);
+            do Screen.drawRectangle(15, 180-y, 25, 185);
+            do Screen.drawRectangle(50, 180-y, 75, 185);
+            do Screen.drawRectangle(15, 175-y, 20, 180);
+            do Screen.drawRectangle(55, 175-y, 90, 180);
+            do Screen.drawRectangle(55, 170-y, 80, 175);
+            do Screen.drawRectangle(55, 165-y, 95, 170);
+            do Screen.drawRectangle(55, 160-y, 95, 165);
+            do Screen.drawRectangle(60, 155-y, 70, 160);
+            do Screen.drawRectangle(75, 155-y, 95, 160);
+            do Screen.drawRectangle(65, 150-y, 90, 155);
+            if (y < 90) {
+                let y = y + 2;
+            }
+            do Screen.setColor(true);
+            do Screen.drawRectangle(45, 230-y, 55, 235-y);
+            do Screen.drawRectangle(70, 230-y, 80, 235-y);
+            do Screen.drawRectangle(45, 225-y, 50, 230-y);
+            do Screen.drawRectangle(70, 225-y, 75, 230-y);
+            do Screen.drawRectangle(45, 220-y, 50, 225-y);
+            do Screen.drawRectangle(70, 220-y, 75, 225-y);
+            do Screen.drawRectangle(45, 215-y, 60, 220-y);
+            do Screen.drawRectangle(65, 215-y, 75, 220-y);
+            do Screen.drawRectangle(40, 210-y, 80, 215-y);
+            do Screen.drawRectangle(35, 205-y, 85, 210-y);
+            do Screen.drawRectangle(30, 200-y, 85, 205-y);
+            do Screen.drawRectangle(25, 195-y, 85, 200-y);
+            do Screen.drawRectangle(90, 195-y, 95, 200-y);
+            do Screen.drawRectangle(20, 190-y, 35, 195-y);
+            do Screen.drawRectangle(40, 190-y, 95, 195-y);
+            do Screen.drawRectangle(15, 185-y, 30, 190-y);
+            do Screen.drawRectangle(45, 185-y, 75, 190-y);
+            do Screen.drawRectangle(15, 180-y, 25, 185-y);
+            do Screen.drawRectangle(50, 180-y, 75, 185-y);
+            do Screen.drawRectangle(15, 175-y, 20, 180-y);
+            do Screen.drawRectangle(55, 175-y, 90, 180-y);
+            do Screen.drawRectangle(55, 170-y, 80, 175-y);
+            do Screen.drawRectangle(55, 165-y, 95, 170-y);
+            do Screen.drawRectangle(55, 160-y, 95, 165-y);
+            do Screen.drawRectangle(60, 155-y, 70, 160-y);
+            do Screen.drawRectangle(75, 155-y, 95, 160-y);
+            do Screen.drawRectangle(65, 150-y, 90, 155-y);
+            do Sys.wait(7);
+        }
+        do Sys.wait(100);
+        do gravity();
+        return;
+    }
+    method void gravity() {
+        while (y > 0)
+        {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(45, 230-y, 55, 235);
+            do Screen.drawRectangle(70, 230-y, 80, 235);
+            do Screen.drawRectangle(45, 225-y, 50, 230);
+            do Screen.drawRectangle(70, 225-y, 75, 230);
+            do Screen.drawRectangle(45, 220-y, 50, 225);
+            do Screen.drawRectangle(70, 220-y, 75, 225);
+            do Screen.drawRectangle(45, 215-y, 60, 220);
+            do Screen.drawRectangle(65, 215-y, 75, 220);
+            do Screen.drawRectangle(40, 210-y, 80, 215);
+            do Screen.drawRectangle(35, 205-y, 85, 210);
+            do Screen.drawRectangle(30, 200-y, 85, 205);
+            do Screen.drawRectangle(25, 195-y, 85, 200);
+            do Screen.drawRectangle(90, 195-y, 95, 200);
+            do Screen.drawRectangle(20, 190-y, 35, 195);
+            do Screen.drawRectangle(40, 190-y, 95, 195);
+            do Screen.drawRectangle(15, 185-y, 30, 190);
+            do Screen.drawRectangle(45, 185-y, 75, 190);
+            do Screen.drawRectangle(15, 180-y, 25, 185);
+            do Screen.drawRectangle(50, 180-y, 75, 185);
+            do Screen.drawRectangle(15, 175-y, 20, 180);
+            do Screen.drawRectangle(55, 175-y, 90, 180);
+            do Screen.drawRectangle(55, 170-y, 80, 175);
+            do Screen.drawRectangle(55, 165-y, 95, 170);
+            do Screen.drawRectangle(55, 160-y, 95, 165);
+            do Screen.drawRectangle(60, 155-y, 70, 160);
+            do Screen.drawRectangle(75, 155-y, 95, 160);
+            do Screen.drawRectangle(65, 150-y, 90, 155);
+            if (y > 0) {
+                let y = y - 2;
+            }
+            do Screen.setColor(true);
+            do Screen.drawRectangle(45, 230-y, 55, 235-y);
+            do Screen.drawRectangle(70, 230-y, 80, 235-y);
+            do Screen.drawRectangle(45, 225-y, 50, 230-y);
+            do Screen.drawRectangle(70, 225-y, 75, 230-y);
+            do Screen.drawRectangle(45, 220-y, 50, 225-y);
+            do Screen.drawRectangle(70, 220-y, 75, 225-y);
+            do Screen.drawRectangle(45, 215-y, 60, 220-y);
+            do Screen.drawRectangle(65, 215-y, 75, 220-y);
+            do Screen.drawRectangle(40, 210-y, 80, 215-y);
+            do Screen.drawRectangle(35, 205-y, 85, 210-y);
+            do Screen.drawRectangle(30, 200-y, 85, 205-y);
+            do Screen.drawRectangle(25, 195-y, 85, 200-y);
+            do Screen.drawRectangle(90, 195-y, 95, 200-y);
+            do Screen.drawRectangle(20, 190-y, 35, 195-y);
+            do Screen.drawRectangle(40, 190-y, 95, 195-y);
+            do Screen.drawRectangle(15, 185-y, 30, 190-y);
+            do Screen.drawRectangle(45, 185-y, 75, 190-y);
+            do Screen.drawRectangle(15, 180-y, 25, 185-y);
+            do Screen.drawRectangle(50, 180-y, 75, 185-y);
+            do Screen.drawRectangle(15, 175-y, 20, 180-y);
+            do Screen.drawRectangle(55, 175-y, 90, 180-y);
+            do Screen.drawRectangle(55, 170-y, 80, 175-y);
+            do Screen.drawRectangle(55, 165-y, 95, 170-y);
+            do Screen.drawRectangle(55, 160-y, 95, 165-y);
+            do Screen.drawRectangle(60, 155-y, 70, 160-y);
+            do Screen.drawRectangle(75, 155-y, 95, 160-y);
+            do Screen.drawRectangle(65, 150-y, 90, 155-y);
+            do Sys.wait(7);
+        }
+        return;
+    }
+
+
 }
