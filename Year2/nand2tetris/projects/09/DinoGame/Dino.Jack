@@ -79,9 +79,7 @@ class Dino {
             do Screen.drawRectangle(60, 155-y, 70, 160);
             do Screen.drawRectangle(75, 155-y, 95, 160);
             do Screen.drawRectangle(65, 150-y, 90, 155);
-            if (y < 90) {
-                let y = y + 2;
-            }
+            let y = y + 2;
             do Screen.setColor(true);
             do Screen.drawRectangle(45, 230-y, 55, 235-y);
             do Screen.drawRectangle(70, 230-y, 80, 235-y);

@@ -3,11 +3,12 @@ class Cactus {
    field int x, y; // screen location of the cactus's top-left corner
    field int size; // length of this cactus, in pixels
    field Memory memAddress;
+   field int newSet;
 
    /** Constructs a new cactus with a given location and size. */
-   constructor Cactus new(int Ax, int Ay, int Asize) {
-      let x = Ax;
-      let y = Ay;
+   constructor Cactus new(int Asize) {
+      let x = 0;
+      let y = 0;
       let size = Asize;
       do draw();
       return this;
@@ -21,28 +22,39 @@ class Cactus {
 
    /** Draws the cactus on the screen. */
    method void draw() {
-        do Screen.setColor(true);
-        do Screen.drawRectangle(x, y, x + size, y + size);
+      // each pixel is of size 5*5
+      do Screen.setColor(true);
 
-        // let memAddress = 16384 + 7423;
-        // do Memory.poke(memAddress+0, 0);
-        // do Memory.poke(memAddress+32, 0);
-        // do Memory.poke(memAddress+64, 0);
-        // do Memory.poke(memAddress+96, 0);
-        // do Memory.poke(memAddress+128, 0);
-        // do Memory.poke(memAddress+160, 0);
-        // do Memory.poke(memAddress+192, 0);
-        // do Memory.poke(memAddress+224, 768);
-        // do Memory.poke(memAddress+256, 768);
-        // do Memory.poke(memAddress+288, 800);
-        // do Memory.poke(memAddress+320, 4896);
-        // do Memory.poke(memAddress+352, 5088);
-        // do Memory.poke(memAddress+384, 7936);
-        // do Memory.poke(memAddress+416, 768);
-        // do Memory.poke(memAddress+448, 768);
-        // do Memory.poke(memAddress+480, 768);
-        return;
-   }
+      // Bottom -> Top
+      // Center pole
+      do Screen.drawRectangle(465, 225, 480, 230); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 220, 480, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 215, 480, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 210, 480, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 205, 480, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 200, 480, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 195, 480, 200); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465, 190, 480, 195); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(470, 185, 475, 190); //(W1, L1, W2, L2)
+
+      // right arm
+      do Screen.drawRectangle(455, 210, 465, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450, 205, 460, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450, 200, 460, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(455, 195, 460, 200); //(W1, L1, W2, L2)
+
+      // left arm
+      // do Screen.drawRectangle(485, 220, 495, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(480, 215, 490, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485, 210, 490, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485, 205, 490, 210); //(W1, L1, W2, L2)
+      
+
+
+      // do Screen.drawRectangle(450, 205, 465, 210); //(W1, L1, W2, L2)
+
+      return;
+    }
 
    /** Erases the cactus from the screen. */
    method void erase() {
@@ -71,15 +83,77 @@ class Cactus {
       return;
    }
 
-   /** Moves the cactus left by 2 pixels. */
-   method void moveLeft() {
-      if (x > 1) {
+   method void moveLeft(int change) {
+      let newSet = change - 2;
+      while (newSet < 310)
+      {
          do Screen.setColor(false);
-         do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-         let x = x - 2;
+         do Screen.drawRectangle(465 - newSet, 225, 480 - newSet, 230); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 220, 480 - newSet, 225); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 215, 480 - newSet, 220); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 210, 480 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 205, 480 - newSet, 210); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 200, 480 - newSet, 205); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 195, 480 - newSet, 200); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 190, 480 - newSet, 195); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(470 - newSet, 185, 475 - newSet, 190); //(W1, L1, W2, L2)
+
+         // right arm
+         do Screen.drawRectangle(455 - newSet, 210, 465 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(450 - newSet, 205, 460 - newSet, 210); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(450 - newSet, 200, 460 - newSet, 205); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(455 - newSet, 195, 460 - newSet, 200); //(W1, L1, W2, L2)
+
+         // left arm
+         // do Screen.drawRectangle(485, 220, 495, 225); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(480 - newSet, 215, 490 - newSet, 220); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(485 - newSet, 210, 490 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(485 - newSet, 205, 490 - newSet, 210); //(W1, L1, W2, L2)
+         let newSet = newSet + 2;
          do Screen.setColor(true);
-         do Screen.drawRectangle(x, y, x + 1, y + size);
+         do Screen.drawRectangle(465 - newSet, 225, 480 - newSet, 230); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 220, 480 - newSet, 225); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 215, 480 - newSet, 220); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 210, 480 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 205, 480 - newSet, 210); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 200, 480 - newSet, 205); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 195, 480 - newSet, 200); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(465 - newSet, 190, 480 - newSet, 195); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(470 - newSet, 185, 475 - newSet, 190); //(W1, L1, W2, L2)
+
+         // right arm
+         do Screen.drawRectangle(455 - newSet, 210, 465 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(450 - newSet, 205, 460 - newSet, 210); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(450 - newSet, 200, 460 - newSet, 205); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(455 - newSet, 195, 460 - newSet, 200); //(W1, L1, W2, L2)
+
+         // left arm
+         do Screen.drawRectangle(480 - newSet, 215, 490 - newSet, 220); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(485 - newSet, 210, 490 - newSet, 215); //(W1, L1, W2, L2)
+         do Screen.drawRectangle(485 - newSet, 205, 490 - newSet, 210); //(W1, L1, W2, L2)
+         do Sys.wait(7);
       }
+      do Screen.setColor(false);
+      do Screen.drawRectangle(465 - 310, 225, 480 - 310, 230); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 220, 480 - 310, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 215, 480 - 310, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 210, 480 - 310, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 205, 480 - 310, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 200, 480 - 310, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 195, 480 - 310, 200); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - 310, 190, 480 - 310, 195); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(470 - 310, 185, 475 - 310, 190); //(W1, L1, W2, L2)
+
+      // right arm
+      do Screen.drawRectangle(455 - 310, 210, 465 - 310, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - 310, 205, 460 - 310, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - 310, 200, 460 - 310, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(455 - 310, 195, 460 - 310, 200); //(W1, L1, W2, L2)
+
+      // left arm
+      do Screen.drawRectangle(480 - 310, 215, 490 - 310, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - 310, 210, 490 - 310, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - 310, 205, 490 - 310, 210); //(W1, L1, W2, L2)
       return;
    }
 }
