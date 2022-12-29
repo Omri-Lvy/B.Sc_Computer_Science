@@ -110,6 +110,8 @@ class Dino {
             do Screen.drawRectangle(60, 155-y, 70, 160-y);
             do Screen.drawRectangle(75, 155-y, 95, 160-y);
             do Screen.drawRectangle(65, 150-y, 90, 155-y);
+            do Screen.drawRectangle(45, 230, 55, 232);
+            do Screen.drawRectangle(70, 230, 80, 232);
             do Sys.wait(7);
         }
         do Sys.wait(100);
@@ -178,6 +180,8 @@ class Dino {
             do Screen.drawRectangle(60, 155-y, 70, 160-y);
             do Screen.drawRectangle(75, 155-y, 95, 160-y);
             do Screen.drawRectangle(65, 150-y, 90, 155-y);
+            do Screen.drawRectangle(45, 230, 55, 232);
+            do Screen.drawRectangle(70, 230, 80, 232);
             do Sys.wait(7);
         }
         return;

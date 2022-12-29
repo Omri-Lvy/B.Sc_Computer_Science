@@ -1,11 +1,21 @@
 function DinoGame.new 0
-push constant 2
+push constant 3
 call Memory.alloc 1
 pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push constant 1
+push constant 230
+push constant 510
+push constant 232
+call Screen.drawRectangle 4
+pop temp 0
 call Dino.new 0
 pop this 0
 push constant 0
-pop this 1
+pop this 2
 push pointer 0
 return
 function DinoGame.run 2
@@ -26,7 +36,7 @@ not
 if-goto WHILE_END1
 call Keyboard.keyPressed 0
 pop local 0
-push this 1
+push this 2
 push constant 1
 eq
 if-goto IF_TRUE0
@@ -37,7 +47,7 @@ call Dino.jump 1
 pop temp 0
 label IF_FALSE0
 push constant 0
-pop this 1
+pop this 2
 goto WHILE_EXP1
 label WHILE_END1
 push local 0
@@ -57,7 +67,7 @@ if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
 push constant 1
-pop this 1
+pop this 2
 label IF_FALSE2
 push local 0
 push constant 32
@@ -66,7 +76,7 @@ if-goto IF_TRUE3
 goto IF_FALSE3
 label IF_TRUE3
 push constant 1
-pop this 1
+pop this 2
 label IF_FALSE3
 label WHILE_EXP2
 push local 0
@@ -77,7 +87,7 @@ not
 if-goto WHILE_END2
 call Keyboard.keyPressed 0
 pop local 0
-push this 1
+push this 2
 push constant 1
 eq
 if-goto IF_TRUE4
@@ -88,7 +98,7 @@ call Dino.jump 1
 pop temp 0
 label IF_FALSE4
 push constant 0
-pop this 1
+pop this 2
 goto WHILE_EXP2
 label WHILE_END2
 goto WHILE_EXP0

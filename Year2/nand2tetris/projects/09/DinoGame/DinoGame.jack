@@ -2,9 +2,12 @@
 class DinoGame {
 
     field Dino dino;
+    field Ground ground;
     field int direction;
 
     constructor DinoGame new() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(1, 230, 510, 232);
         let dino = Dino.new();
         let direction = 0;
         return this;
