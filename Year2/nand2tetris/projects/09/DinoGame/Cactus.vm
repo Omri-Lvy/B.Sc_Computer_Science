@@ -1,17 +1,27 @@
 function Cactus.new 0
-push constant 4
+push constant 3
 call Memory.alloc 1
 pop pointer 0
-push argument 0
+push constant 0
 pop this 0
-push argument 1
+push argument 0
 pop this 1
-push argument 2
-pop this 2
 push pointer 0
 call Cactus.draw 1
 pop temp 0
 push pointer 0
+return
+function Cactus.getXPos 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Cactus.setXPos 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 0
+push constant 0
 return
 function Cactus.dispose 0
 push argument 0
@@ -28,14 +38,100 @@ push constant 0
 not
 call Screen.setColor 1
 pop temp 0
-push this 0
-push this 1
-push this 0
-push this 2
-add
-push this 1
-push this 2
-add
+push constant 465
+push constant 225
+push constant 480
+push constant 230
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 220
+push constant 480
+push constant 225
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 215
+push constant 480
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 210
+push constant 480
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 205
+push constant 480
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 200
+push constant 480
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 195
+push constant 480
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 190
+push constant 480
+push constant 195
+call Screen.drawRectangle 4
+pop temp 0
+push constant 470
+push constant 185
+push constant 475
+push constant 190
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push constant 210
+push constant 465
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push constant 205
+push constant 460
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push constant 200
+push constant 460
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push constant 195
+push constant 460
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 480
+push constant 215
+push constant 490
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push constant 210
+push constant 490
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push constant 205
+push constant 490
+push constant 210
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
@@ -46,114 +142,670 @@ pop pointer 0
 push constant 0
 call Screen.setColor 1
 pop temp 0
+push constant 465
 push this 0
-push this 1
+sub
+push constant 225
+push constant 480
 push this 0
-push this 2
-add
-push this 1
-push this 2
-add
+sub
+push constant 230
 call Screen.drawRectangle 4
 pop temp 0
-push constant 0
-return
-function Cactus.incSize 0
-push argument 0
-pop pointer 0
-push this 1
-push this 2
-add
-push constant 254
-lt
+push constant 465
 push this 0
-push this 2
-add
-push constant 510
-lt
-and
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push pointer 0
-call Cactus.erase 1
-pop temp 0
-push this 2
-push constant 2
-add
-pop this 2
-push pointer 0
-call Cactus.draw 1
-pop temp 0
-label IF_FALSE0
-push constant 0
-return
-function Cactus.decSize 0
-push argument 0
-pop pointer 0
-push this 2
-push constant 2
-gt
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push pointer 0
-call Cactus.erase 1
-pop temp 0
-push this 2
-push constant 2
 sub
-pop this 2
-push pointer 0
-call Cactus.draw 1
+push constant 220
+push constant 480
+push this 0
+sub
+push constant 225
+call Screen.drawRectangle 4
 pop temp 0
-label IF_FALSE0
+push constant 465
+push this 0
+sub
+push constant 215
+push constant 480
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 210
+push constant 480
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 205
+push constant 480
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 200
+push constant 480
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 195
+push constant 480
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 190
+push constant 480
+push this 0
+sub
+push constant 195
+call Screen.drawRectangle 4
+pop temp 0
+push constant 470
+push this 0
+sub
+push constant 185
+push constant 475
+push this 0
+sub
+push constant 190
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 210
+push constant 465
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 205
+push constant 460
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 200
+push constant 460
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 195
+push constant 460
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 480
+push this 0
+sub
+push constant 215
+push constant 490
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 210
+push constant 490
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 205
+push constant 490
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
 push constant 0
 return
 function Cactus.moveLeft 0
 push argument 0
 pop pointer 0
-push this 0
-push constant 1
-gt
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
 push constant 0
 call Screen.setColor 1
 pop temp 0
+push constant 465
 push this 0
-push this 2
-add
-push constant 1
 sub
-push this 1
+push constant 225
+push constant 480
 push this 0
-push this 2
-add
-push this 1
-push this 2
-add
+sub
+push constant 230
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 220
+push constant 480
+push this 0
+sub
+push constant 225
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 215
+push constant 480
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 210
+push constant 480
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 205
+push constant 480
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 200
+push constant 480
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 195
+push constant 480
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 190
+push constant 480
+push this 0
+sub
+push constant 195
+call Screen.drawRectangle 4
+pop temp 0
+push constant 470
+push this 0
+sub
+push constant 185
+push constant 475
+push this 0
+sub
+push constant 190
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 210
+push constant 465
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 205
+push constant 460
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 200
+push constant 460
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 195
+push constant 460
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 480
+push this 0
+sub
+push constant 215
+push constant 490
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 210
+push constant 490
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 205
+push constant 490
+push this 0
+sub
+push constant 210
 call Screen.drawRectangle 4
 pop temp 0
 push this 0
 push constant 2
-sub
+add
 pop this 0
 push constant 0
 not
 call Screen.setColor 1
 pop temp 0
+push constant 465
 push this 0
-push this 1
+sub
+push constant 225
+push constant 480
 push this 0
-push constant 1
-add
-push this 1
-push this 2
-add
+sub
+push constant 230
 call Screen.drawRectangle 4
 pop temp 0
-label IF_FALSE0
+push constant 465
+push this 0
+sub
+push constant 220
+push constant 480
+push this 0
+sub
+push constant 225
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 215
+push constant 480
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 210
+push constant 480
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 205
+push constant 480
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 200
+push constant 480
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 195
+push constant 480
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push this 0
+sub
+push constant 190
+push constant 480
+push this 0
+sub
+push constant 195
+call Screen.drawRectangle 4
+pop temp 0
+push constant 470
+push this 0
+sub
+push constant 185
+push constant 475
+push this 0
+sub
+push constant 190
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 210
+push constant 465
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 205
+push constant 460
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push this 0
+sub
+push constant 200
+push constant 460
+push this 0
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push this 0
+sub
+push constant 195
+push constant 460
+push this 0
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 480
+push this 0
+sub
+push constant 215
+push constant 490
+push this 0
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 210
+push constant 490
+push this 0
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push this 0
+sub
+push constant 205
+push constant 490
+push this 0
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 7
+call Sys.wait 1
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 225
+push constant 480
+push constant 310
+sub
+push constant 230
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 220
+push constant 480
+push constant 310
+sub
+push constant 225
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 215
+push constant 480
+push constant 310
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 210
+push constant 480
+push constant 310
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 205
+push constant 480
+push constant 310
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 200
+push constant 480
+push constant 310
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 195
+push constant 480
+push constant 310
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 465
+push constant 310
+sub
+push constant 190
+push constant 480
+push constant 310
+sub
+push constant 195
+call Screen.drawRectangle 4
+pop temp 0
+push constant 470
+push constant 310
+sub
+push constant 185
+push constant 475
+push constant 310
+sub
+push constant 190
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push constant 310
+sub
+push constant 210
+push constant 465
+push constant 310
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push constant 310
+sub
+push constant 205
+push constant 460
+push constant 310
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 450
+push constant 310
+sub
+push constant 200
+push constant 460
+push constant 310
+sub
+push constant 205
+call Screen.drawRectangle 4
+pop temp 0
+push constant 455
+push constant 310
+sub
+push constant 195
+push constant 460
+push constant 310
+sub
+push constant 200
+call Screen.drawRectangle 4
+pop temp 0
+push constant 480
+push constant 310
+sub
+push constant 215
+push constant 490
+push constant 310
+sub
+push constant 220
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push constant 310
+sub
+push constant 210
+push constant 490
+push constant 310
+sub
+push constant 215
+call Screen.drawRectangle 4
+pop temp 0
+push constant 485
+push constant 310
+sub
+push constant 205
+push constant 490
+push constant 310
+sub
+push constant 210
+call Screen.drawRectangle 4
+pop temp 0
+push constant 7
+call Sys.wait 1
+pop temp 0
 push constant 0
 return

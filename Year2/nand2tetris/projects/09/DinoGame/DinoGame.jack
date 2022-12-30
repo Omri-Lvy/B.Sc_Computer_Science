@@ -4,17 +4,17 @@ class DinoGame {
     field Dino dino;
     field Cactus cactus;
     field Hawk hawk;
-    field Ground ground;
-    field int direction;
-    field int x;
+    field boolean gravity;
+    field boolean jump;
 
     constructor DinoGame new() {
         do Screen.setColor(true);
         do Screen.drawRectangle(1, 230, 510, 232);
         let dino = Dino.new();
         let cactus = Cactus.new(50);
-        let hawk = Hawk.new(50);
-        let direction = 0;
+        // let hawk = Hawk.new(50);
+        let jump = false;
+        let gravity = false;
         return this;
     }
 
@@ -27,31 +27,32 @@ class DinoGame {
         //  waits for a key to be pressed
         while (key = 0) {
             let key = Keyboard.keyPressed();
-            if (direction = 1) { 
-                do dino.jump();
+            do cactus.moveLeft();
+            do dino.jump(jump);
+            do dino.gravity(gravity);
+            do Screen.setColor(false);
+            do Screen.drawRectangle(1, 230, 510, 232);
+            do Screen.setColor(true);
+            do Screen.drawRectangle(1, 230, 510, 232);
+            if (dino.getYPos() < 0) {
+                let jump = false;
+                let gravity = false;
             }
-           let direction = 0;
+            if (dino.getYPos() > 80) {
+                let jump = false;
+                let gravity = true;
+            }
+            if (450 - cactus.getXPos() < 10) {
+                do cactus.erase();
+                do cactus.setXPos(0);
+            }
         }
-
         if (key = 81)  { let exit = true; }// q key
-        if (key = 131) { let direction = 1; }// up arrow
-        if (key = 32) { let direction = 1; }// space key
-
+        if (key = 131) { let jump = true; }// up arrow
+        if (key = 32) { let jump = true; }// space key
         // waits for the key to be released
-        let x = 0;
         while (~(key = 0)) {
             let key = Keyboard.keyPressed();
-            let x = x + 2;
-            if (direction = 1) { 
-                do dino.jump(); 
-            }
-            if (x > 310) {
-                let x = 0;
-            }
-            do cactus.moveLeft(x);
-            do hawk.moveLeft(x);
-
-            let direction = 0;
         }
      } // while
      return;

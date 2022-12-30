@@ -1,17 +1,25 @@
 class Cactus {
 
-   field int x, y; // screen location of the cactus's top-left corner
+   field int xPos;
    field int size; // length of this cactus, in pixels
    field Memory memAddress;
-   field int newSet;
+
 
    /** Constructs a new cactus with a given location and size. */
    constructor Cactus new(int Asize) {
-      let x = 0;
-      let y = 0;
+      let xPos = 0;
       let size = Asize;
       do draw();
       return this;
+   }
+
+   method int getXPos() {
+      return xPos;
+   }
+
+   method void setXPos(int newXPos) {
+      let xPos = newXPos;
+      return;
    }
 
    /** Disposes this cactus. */
@@ -49,8 +57,6 @@ class Cactus {
       do Screen.drawRectangle(485, 210, 490, 215); //(W1, L1, W2, L2)
       do Screen.drawRectangle(485, 205, 490, 210); //(W1, L1, W2, L2)
       
-
-
       // do Screen.drawRectangle(450, 205, 465, 210); //(W1, L1, W2, L2)
 
       return;
@@ -59,80 +65,97 @@ class Cactus {
    /** Erases the cactus from the screen. */
    method void erase() {
       do Screen.setColor(false);
-      do Screen.drawRectangle(x, y, x + size, y + size);
+      do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 210, 480 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 205, 480 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 200, 480 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 195, 480 - xPos, 200); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 190, 480 - xPos, 195); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(470 - xPos, 185, 475 - xPos, 190); //(W1, L1, W2, L2)
+
+      // right arm
+      do Screen.drawRectangle(455 - xPos, 210, 465 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 205, 460 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 200, 460 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(455 - xPos, 195, 460 - xPos, 200); //(W1, L1, W2, L2)
+
+      // left arm
+      // do Screen.drawRectangle(485, 220, 495, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(480 - xPos, 215, 490 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 210, 490 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 205, 490 - xPos, 210); //(W1, L1, W2, L2)
       return;
    }
 
-    /** Increments the cactus size by 2 pixels. */
-   method void incSize() {
-      if (((y + size) < 254) & ((x + size) < 510)) {
-         do erase();
-         let size = size + 2;
-         do draw();
-      }
-      return;
-   }
+   //  /** Increments the cactus size by 2 pixels. */
+   // method void incSize() {
+   //    if (((y + size) < 254) & ((x + size) < 510)) {
+   //       do erase();
+   //       let size = size + 2;
+   //       do draw();
+   //    }
+   //    return;
+   // }
 
-   /** Decrements the cactus size by 2 pixels. */
-   method void decSize() {
-      if (size > 2) {
-         do erase();
-         let size = size - 2;
-         do draw();
-      }
-      return;
-   }
+   // /** Decrements the cactus size by 2 pixels. */
+   // method void decSize() {
+   //    if (size > 2) {
+   //       do erase();
+   //       let size = size - 2;
+   //       do draw();
+   //    }
+   //    return;
+   // }
 
-   method void moveLeft(int change) {
-      let newSet = change - 2;
-      while (newSet < 310)
-      {
-         do Screen.setColor(false);
-         do Screen.drawRectangle(465 - newSet, 225, 480 - newSet, 230); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 220, 480 - newSet, 225); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 215, 480 - newSet, 220); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 210, 480 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 205, 480 - newSet, 210); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 200, 480 - newSet, 205); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 195, 480 - newSet, 200); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 190, 480 - newSet, 195); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(470 - newSet, 185, 475 - newSet, 190); //(W1, L1, W2, L2)
+   method void moveLeft() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 210, 480 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 205, 480 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 200, 480 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 195, 480 - xPos, 200); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 190, 480 - xPos, 195); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(470 - xPos, 185, 475 - xPos, 190); //(W1, L1, W2, L2)
 
-         // right arm
-         do Screen.drawRectangle(455 - newSet, 210, 465 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(450 - newSet, 205, 460 - newSet, 210); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(450 - newSet, 200, 460 - newSet, 205); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(455 - newSet, 195, 460 - newSet, 200); //(W1, L1, W2, L2)
+      // right arm
+      do Screen.drawRectangle(455 - xPos, 210, 465 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 205, 460 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 200, 460 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(455 - xPos, 195, 460 - xPos, 200); //(W1, L1, W2, L2)
 
-         // left arm
-         // do Screen.drawRectangle(485, 220, 495, 225); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(480 - newSet, 215, 490 - newSet, 220); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(485 - newSet, 210, 490 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(485 - newSet, 205, 490 - newSet, 210); //(W1, L1, W2, L2)
-         let newSet = newSet + 2;
-         do Screen.setColor(true);
-         do Screen.drawRectangle(465 - newSet, 225, 480 - newSet, 230); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 220, 480 - newSet, 225); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 215, 480 - newSet, 220); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 210, 480 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 205, 480 - newSet, 210); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 200, 480 - newSet, 205); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 195, 480 - newSet, 200); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(465 - newSet, 190, 480 - newSet, 195); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(470 - newSet, 185, 475 - newSet, 190); //(W1, L1, W2, L2)
+      // left arm
+      // do Screen.drawRectangle(485, 220, 495, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(480 - xPos, 215, 490 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 210, 490 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 205, 490 - xPos, 210); //(W1, L1, W2, L2)
+      let xPos = xPos + 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 210, 480 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 205, 480 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 200, 480 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 195, 480 - xPos, 200); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(465 - xPos, 190, 480 - xPos, 195); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(470 - xPos, 185, 475 - xPos, 190); //(W1, L1, W2, L2)
 
-         // right arm
-         do Screen.drawRectangle(455 - newSet, 210, 465 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(450 - newSet, 205, 460 - newSet, 210); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(450 - newSet, 200, 460 - newSet, 205); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(455 - newSet, 195, 460 - newSet, 200); //(W1, L1, W2, L2)
+      // right arm
+      do Screen.drawRectangle(455 - xPos, 210, 465 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 205, 460 - xPos, 210); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(450 - xPos, 200, 460 - xPos, 205); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(455 - xPos, 195, 460 - xPos, 200); //(W1, L1, W2, L2)
 
-         // left arm
-         do Screen.drawRectangle(480 - newSet, 215, 490 - newSet, 220); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(485 - newSet, 210, 490 - newSet, 215); //(W1, L1, W2, L2)
-         do Screen.drawRectangle(485 - newSet, 205, 490 - newSet, 210); //(W1, L1, W2, L2)
-         do Sys.wait(7);
-      }
+      // left arm
+      do Screen.drawRectangle(480 - xPos, 215, 490 - xPos, 220); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 210, 490 - xPos, 215); //(W1, L1, W2, L2)
+      do Screen.drawRectangle(485 - xPos, 205, 490 - xPos, 210); //(W1, L1, W2, L2)
+      do Sys.wait(7);
+
       do Screen.setColor(false);
       do Screen.drawRectangle(465 - 310, 225, 480 - 310, 230); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - 310, 220, 480 - 310, 225); //(W1, L1, W2, L2)
@@ -154,6 +177,7 @@ class Cactus {
       do Screen.drawRectangle(480 - 310, 215, 490 - 310, 220); //(W1, L1, W2, L2)
       do Screen.drawRectangle(485 - 310, 210, 490 - 310, 215); //(W1, L1, W2, L2)
       do Screen.drawRectangle(485 - 310, 205, 490 - 310, 210); //(W1, L1, W2, L2)
+      do Sys.wait(7);
       return;
    }
 }
