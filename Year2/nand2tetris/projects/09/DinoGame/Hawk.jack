@@ -3,7 +3,7 @@ class Hawk {
     field int x, y; // screen location of the hawk's top-left corner
     field int size; // length of this hawk, in pixels
     field Memory memAddress;
-    field int newSet;
+    field int xPos;
 
     /** Constructs a new hawk with a given location and size. */
     constructor Hawk new(int Asize) {
@@ -42,56 +42,39 @@ class Hawk {
       return;
     }
 
-    // /** Erases the hawk from the screen. */
-    // method void erase() {
-    //     do Screen.setColor(false);
-    //     do Screen.drawRectangle(x, y, x + size, y + size);
-    //     return;
-    // }
-
-    /** Increments the hawk size by 2 pixels. */
-    // method void incSize() {
-    //     if (((y + size) < 254) & ((x + size) < 510)) {
-    //         do erase();
-    //         let size = size + 2;
-    //         do draw();
-    //     }
-    //     return;
-    // }
-
     method void moveLeft(int change) {
-        let newSet = change - 2;
-        while (newSet < 310)
+        let xPos = change - 2;
+        while (xPos < 310)
         {
             do Screen.setColor(false);
-            do Screen.drawRectangle(440 - newSet, 180, 445 - newSet, 185); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 175, 450 - newSet, 180); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 170, 450 - newSet, 175); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 165, 455 - newSet, 170); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 160, 460 - newSet, 165); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 155, 475 - newSet, 160); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 150, 465 - newSet, 155); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(435 - newSet, 145, 480 - newSet, 150); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(430 - newSet, 140, 465 - newSet, 145); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(400 - newSet, 135, 460 - newSet, 140); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(405 - newSet, 130, 425 - newSet, 135); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(410 - newSet, 125, 420 - newSet, 130); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(415 - newSet, 120, 420 - newSet, 125); //(W1, L1, W2, L2)
-            let newSet = newSet + 2;
+            do Screen.drawRectangle(440 - xPos, 180, 445 - xPos, 185); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 175, 450 - xPos, 180); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 170, 450 - xPos, 175); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 165, 455 - xPos, 170); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 160, 460 - xPos, 165); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 155, 475 - xPos, 160); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 150, 465 - xPos, 155); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(435 - xPos, 145, 480 - xPos, 150); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(430 - xPos, 140, 465 - xPos, 145); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(400 - xPos, 135, 460 - xPos, 140); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(405 - xPos, 130, 425 - xPos, 135); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(410 - xPos, 125, 420 - xPos, 130); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(415 - xPos, 120, 420 - xPos, 125); //(W1, L1, W2, L2)
+            let xPos = xPos + 2;
             do Screen.setColor(true);
-            do Screen.drawRectangle(440 - newSet, 180, 445 - newSet, 185); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 175, 450 - newSet, 180); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 170, 450 - newSet, 175); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 165, 455 - newSet, 170); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 160, 460 - newSet, 165); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 155, 475 - newSet, 160); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(440 - newSet, 150, 465 - newSet, 155); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(435 - newSet, 145, 480 - newSet, 150); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(430 - newSet, 140, 465 - newSet, 145); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(400 - newSet, 135, 460 - newSet, 140); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(405 - newSet, 130, 425 - newSet, 135); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(410 - newSet, 125, 420 - newSet, 130); //(W1, L1, W2, L2)
-            do Screen.drawRectangle(415 - newSet, 120, 420 - newSet, 125); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 180, 445 - xPos, 185); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 175, 450 - xPos, 180); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 170, 450 - xPos, 175); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 165, 455 - xPos, 170); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 160, 460 - xPos, 165); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 155, 475 - xPos, 160); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(440 - xPos, 150, 465 - xPos, 155); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(435 - xPos, 145, 480 - xPos, 150); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(430 - xPos, 140, 465 - xPos, 145); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(400 - xPos, 135, 460 - xPos, 140); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(405 - xPos, 130, 425 - xPos, 135); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(410 - xPos, 125, 420 - xPos, 130); //(W1, L1, W2, L2)
+            do Screen.drawRectangle(415 - xPos, 120, 420 - xPos, 125); //(W1, L1, W2, L2)
             do Sys.wait(7);
         }
         do Screen.setColor(false);

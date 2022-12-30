@@ -89,26 +89,6 @@ class Cactus {
       return;
    }
 
-   //  /** Increments the cactus size by 2 pixels. */
-   // method void incSize() {
-   //    if (((y + size) < 254) & ((x + size) < 510)) {
-   //       do erase();
-   //       let size = size + 2;
-   //       do draw();
-   //    }
-   //    return;
-   // }
-
-   // /** Decrements the cactus size by 2 pixels. */
-   // method void decSize() {
-   //    if (size > 2) {
-   //       do erase();
-   //       let size = size - 2;
-   //       do draw();
-   //    }
-   //    return;
-   // }
-
    method void moveLeft() {
       do Screen.setColor(false);
       do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
