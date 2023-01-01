@@ -42,8 +42,6 @@ class DinoGame {
                 }
                 do dino.jump(jump);
                 do dino.gravity(gravity);
-                // TODO: BUG when we click twice on jump
-
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
                 if (cactusXPos > 380) {
@@ -83,8 +81,10 @@ class DinoGame {
             }
 
             if (key = 81)  { let exit = true; }// q key
-            if (key = 131) { let jump = true; }// up arrow
-            if (key = 32) { let jump = true; }// space key
+            if (~gravity) {
+                if (key = 131) { let jump = true; }// up arrow
+                if (key = 32) { let jump = true; }// space key
+            }
             // waits for the key to be released
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
