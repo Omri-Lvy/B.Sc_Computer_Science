@@ -6,6 +6,9 @@ class DinoGame {
     field Hawk hawk;
     field boolean gravity;
     field boolean jump;
+    field boolean over;
+    field int cactusXPos;
+    field int dinoYPos;
 
     constructor DinoGame new() {
         do Screen.setColor(true);
@@ -19,44 +22,69 @@ class DinoGame {
     }
 
     method void run() {
-      var char key;  // the key currently pressed by the user
-      var boolean exit;
-      let exit = false;
+        var char key;  // the key currently pressed by the user
+        var boolean exit;
+        let cactusXPos = 0;
+        let dinoYPos = 0;
+        let exit = false;
+        let over = false;
       
-      while (~exit) {
-        //  waits for a key to be pressed
-        while (key = 0) {
-            let key = Keyboard.keyPressed();
-            do cactus.moveLeft();
-            do dino.jump(jump);
-            do dino.gravity(gravity);
-            do Screen.setColor(false);
-            do Screen.drawRectangle(1, 230, 510, 232);
-            do Screen.setColor(true);
-            do Screen.drawRectangle(1, 230, 510, 232);
-            if (dino.getYPos() < 0) {
-                let jump = false;
-                let gravity = false;
+        while (~exit) {
+            //  waits for a key to be pressed
+            // do Screen.setColor(false);
+            // do Screen.drawRectangle(200, 100, 510, 140);
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                do cactus.moveLeft();
+                do dino.jump(jump);
+                do dino.gravity(gravity);
+                // TODO: BUG when we click twick on jump
+
+                let dinoYPos = dino.getYPos();
+                let cactusXPos = cactus.getXPos();
+                if (cactusXPos > 380) {
+                    if (cactusXPos < 420) {
+                        if (dinoYPos < 35) {
+                            do Output.printString("SHI->");
+                            do Output.printInt(dinoYPos);
+                            do Output.printInt(cactusXPos);
+                            // let exit = true;
+                        }
+                    }
+                    // do Screen.setColor(true);
+                    // do Screen.drawRectangle(200, 100, 510, 140);
+                }
+                do Screen.setColor(false);
+                do Screen.drawRectangle(1, 230, 510, 232);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(1, 230, 510, 232);
+                if (dinoYPos < 0) {
+                    let jump = false;
+                    let gravity = false;
+                }
+
+                if (dinoYPos > 80) {
+                    let jump = false;
+                    let gravity = true;
+                }
+
+                if (450 - cactusXPos < 10) {
+                    do cactus.erase();
+                    do cactus.setXPos(0);
+                }
+
             }
-            if (dino.getYPos() > 80) {
-                let jump = false;
-                let gravity = true;
+
+            if (key = 81)  { let exit = true; }// q key
+            if (key = 131) { let jump = true; }// up arrow
+            if (key = 32) { let jump = true; }// space key
+            // waits for the key to be released
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
             }
-            if (450 - cactus.getXPos() < 10) {
-                do cactus.erase();
-                do cactus.setXPos(0);
-            }
-        }
-        if (key = 81)  { let exit = true; }// q key
-        if (key = 131) { let jump = true; }// up arrow
-        if (key = 32) { let jump = true; }// space key
-        // waits for the key to be released
-        while (~(key = 0)) {
-            let key = Keyboard.keyPressed();
-        }
-     } // while
-     return;
-   }
+        } // while
+        return;
+    }
 
     method void dispose() {
       do Memory.deAlloc(this);

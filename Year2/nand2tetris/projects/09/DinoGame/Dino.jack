@@ -119,7 +119,8 @@ class Dino {
         return;
     }
 
-    
+    // HEIGHT -> 235 - 150
+    // WIDTH -> 50 - 130     
     method void gravity(int gravity) {
         if (gravity) {
             do Screen.setColor(false);
@@ -150,7 +151,9 @@ class Dino {
             do Screen.drawRectangle(95, 155 - yPos, 105, 160  - yPos);
             do Screen.drawRectangle(110, 155 - yPos, 130, 160  - yPos);
             do Screen.drawRectangle(100, 150 - yPos, 125, 155  - yPos);
+
             let yPos = yPos - 2;
+
             do Screen.setColor(true);
             do Screen.drawRectangle(80, 230 - yPos, 90, 235  - yPos);
             do Screen.drawRectangle(105, 230 - yPos, 115, 235  - yPos);

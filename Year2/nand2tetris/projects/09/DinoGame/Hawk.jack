@@ -42,6 +42,8 @@ class Hawk {
       return;
     }
 
+    // HEIGHT -> 180 - 120
+    // WIDTH -> 480 - 400 
     method void moveLeft(int change) {
         let xPos = change - 2;
         while (xPos < 310)
