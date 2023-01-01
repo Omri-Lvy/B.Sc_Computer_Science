@@ -23,6 +23,39 @@ class Dino {
         return;
     }
 
+    method void erase() {
+        // each pixel is of size 5*5
+        do Screen.setColor(false);
+        do Screen.drawRectangle(80, 230 - yPos, 90, 235  - yPos);
+        do Screen.drawRectangle(105, 230 - yPos, 115, 235  - yPos);
+        do Screen.drawRectangle(80, 225 - yPos, 85, 230  - yPos);
+        do Screen.drawRectangle(105, 225 - yPos, 110, 230  - yPos);
+        do Screen.drawRectangle(80, 220 - yPos, 85, 225  - yPos);
+        do Screen.drawRectangle(105, 220 - yPos, 110, 225  - yPos);
+        do Screen.drawRectangle(80, 215 - yPos, 95, 220  - yPos);
+        do Screen.drawRectangle(100, 215 - yPos, 110, 220  - yPos);
+        do Screen.drawRectangle(75, 210 - yPos, 115, 215  - yPos);
+        do Screen.drawRectangle(70, 205 - yPos, 120, 210  - yPos);
+        do Screen.drawRectangle(65, 200 - yPos, 120, 205  - yPos);
+        do Screen.drawRectangle(60, 195 - yPos, 120, 200  - yPos);
+        do Screen.drawRectangle(125, 195 - yPos, 130, 200  - yPos);
+        do Screen.drawRectangle(55, 190 - yPos, 70, 195  - yPos);
+        do Screen.drawRectangle(75, 190 - yPos, 130, 195  - yPos);
+        do Screen.drawRectangle(50, 185 - yPos, 65, 190  - yPos);
+        do Screen.drawRectangle(80, 185 - yPos, 110, 190  - yPos);
+        do Screen.drawRectangle(50, 180 - yPos, 60, 185  - yPos);
+        do Screen.drawRectangle(85, 180 - yPos, 110, 185  - yPos);
+        do Screen.drawRectangle(50, 175 - yPos, 55, 180  - yPos);
+        do Screen.drawRectangle(90, 175 - yPos, 125, 180  - yPos);
+        do Screen.drawRectangle(90, 170 - yPos, 115, 175  - yPos);
+        do Screen.drawRectangle(90, 165 - yPos, 130, 170  - yPos);
+        do Screen.drawRectangle(90, 160 - yPos, 130, 165  - yPos);
+        do Screen.drawRectangle(95, 155 - yPos, 105, 160  - yPos);
+        do Screen.drawRectangle(110, 155 - yPos, 130, 160  - yPos);
+        do Screen.drawRectangle(100, 150 - yPos, 125, 155  - yPos);
+	    return;
+    }
+
     method void draw() {
         // each pixel is of size 5*5
         do Screen.setColor(true);

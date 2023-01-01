@@ -29,16 +29,20 @@ class DinoGame {
         var boolean shouldMoveCactusLeft;
         var boolean shouldMoveHawkLeft;
         var boolean didGameOver;
-        var int cactusCounter;
+        var int obstacleCounter;
+        var int hawkCounter;
+        var boolean isMultOf5;
 
         let cactusXPos = 0;
         let hawkXPos = 0;
-        let cactusCounter = 0;
+        let obstacleCounter = 0;
+        let hawkCounter = 0;
         let dinoYPos = 0;
         let exit = false;
         let shouldMoveCactusLeft = true;
         let shouldMoveHawkLeft = false;
         let didGameOver = false;
+        let isMultOf5 = false;
         
       
         while (~exit) {
@@ -57,24 +61,25 @@ class DinoGame {
                 do dino.gravity(gravity);
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
-                if (cactusXPos > 380) {
-                    if (cactusXPos < 420) {
+                let hawkXPos = hawk.getXPos();
+
+                if (cactusXPos > 360) {
+                    if (cactusXPos < 440) {
                         if (dinoYPos < 35) {
                             do cactus.erase();
-                            do dino.dispose();
-                            return cactusCounter;
+                            do dino.erase();
+                            return obstacleCounter;
                         }
                     }
                 }
 
                 if (shouldMoveHawkLeft) {
-                    let hawkXPos = hawk.getXPos();
-                    if (hawkXPos > 380) {
+                    if (hawkXPos > 340) {
                         if (hawkXPos < 420) {
-                            if (dinoYPos > 2) {
+                            if (dinoYPos > 0) {
                                 do cactus.erase();
-                                do dino.dispose();
-                                return cactusCounter;
+                                do dino.erase();
+                                return obstacleCounter - 1;
                             }
                         }
                     }
@@ -96,20 +101,26 @@ class DinoGame {
 
                 if (450 - cactusXPos < 10) {
                     do cactus.erase();
-                    if (cactusCounter < 2) {
+
+                    if (hawkCounter < 1) {
                         do cactus.setXPos(0);
                     }
-                    let cactusCounter = cactusCounter + 1;
-                    if (cactusCounter > 1) {
+
+                    let obstacleCounter = obstacleCounter + 1;
+                    let hawkCounter = hawkCounter + 1;
+
+                    if (hawkCounter > 1) {
                         do hawk.draw();
+                        do hawk.setXPos(0);
                         let shouldMoveHawkLeft = true;
                         let shouldMoveCactusLeft = false;
+                        let hawkCounter = 0;
+                        let obstacleCounter = obstacleCounter + 1;
                     }
                 }
 
-                if (450 - hawkXPos < 10) {
+                if (450 - hawkXPos < 80) {
                     do hawk.erase();
-                    let cactusCounter = cactusCounter + 1;
                     let shouldMoveHawkLeft = false;
                     let shouldMoveCactusLeft = true;
                 }
@@ -126,7 +137,7 @@ class DinoGame {
                 let key = Keyboard.keyPressed();                            
             }
         } // while
-        return cactusCounter;
+        return obstacleCounter;
     }
 
     method void dispose() {
