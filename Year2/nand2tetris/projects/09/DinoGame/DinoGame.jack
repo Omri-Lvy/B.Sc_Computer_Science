@@ -62,7 +62,7 @@ class DinoGame {
                         if (dinoYPos < 35) {
                             do cactus.erase();
                             do dino.dispose();
-                            return score;
+                            return cactusCounter;
                         }
                     }
                 }
@@ -74,7 +74,7 @@ class DinoGame {
                             if (dinoYPos > 2) {
                                 do cactus.erase();
                                 do dino.dispose();
-                                return score;
+                                return cactusCounter;
                             }
                         }
                     }
@@ -109,8 +109,9 @@ class DinoGame {
 
                 if (450 - hawkXPos < 10) {
                     do hawk.erase();
-                    do hawk.setXPos(0);
                     let cactusCounter = cactusCounter + 1;
+                    let shouldMoveHawkLeft = false;
+                    let shouldMoveCactusLeft = true;
                 }
 
             }
@@ -125,7 +126,7 @@ class DinoGame {
                 let key = Keyboard.keyPressed();                            
             }
         } // while
-        return score;
+        return cactusCounter;
     }
 
     method void dispose() {
