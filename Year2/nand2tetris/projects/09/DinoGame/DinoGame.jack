@@ -7,6 +7,7 @@ class DinoGame {
     field boolean gravity;
     field boolean jump;
     field int cactusXPos;
+    field int hawkXPos;
     field int dinoYPos;
 
     constructor DinoGame new() {
@@ -14,53 +15,80 @@ class DinoGame {
         do Screen.drawRectangle(1, 230, 510, 232);
         let dino = Dino.new();
         let cactus = Cactus.new(50);
-        // let hawk = Hawk.new(50);
+        let hawk = Hawk.new(50);
         let jump = false;
         let gravity = false;
         return this;
     }
 
-    method void run() {
+    method int run() {
         var char key;  // the key currently pressed by the user
         var boolean exit;
-        var boolean shouldMoveLeft;
-        var boolean didItPrintGameOver;
-        var boolean didItPrintGameOver;
+        var boolean shouldMoveCactusLeft;
+        var boolean shouldMoveHawkLeft;
+        var boolean didGameOver;
+        var int cactusCounter;
 
         let cactusXPos = 0;
+        let hawkXPos = 0;
+        let cactusCounter = 0;
         let dinoYPos = 0;
         let exit = false;
-        let shouldMoveLeft = true;
-        let didItPrintGameOver = false;
+        let shouldMoveCactusLeft = true;
+        let shouldMoveHawkLeft = false;
+        let didGameOver = false;
+        
       
         while (~exit) {
             //  waits for a key to be pressed
             while (key = 0) {
                 let key = Keyboard.keyPressed();
-                if (shouldMoveLeft) {
+                if (shouldMoveCactusLeft) {
                     do cactus.moveLeft();
                 }
+
+                if (shouldMoveHawkLeft) {
+                    do hawk.moveLeft();
+                }
+
                 do dino.jump(jump);
                 do dino.gravity(gravity);
-                // TODO: BUG when we click twice on jump
 
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
                 if (cactusXPos > 380) {
                     if (cactusXPos < 420) {
                         if (dinoYPos < 35) {
-                            if (~didItPrintGameOver) {
+                            if (~didGameOver) {
                                 do Output.printString("GAME OVER ->");
-                                do Output.printInt(dinoYPos);
-                                do Output.printInt(cactusXPos);
-                                let didItPrintGameOver = true;
+                                do Output.printInt(cactusCounter);
+                                let didGameOver = true;
                                 do cactus.erase();
                                 do dino.dispose();
-                                let shouldMoveLeft = false;
+                                let shouldMoveCactusLeft = false;
                             }
                         }
                     }
                 }
+                
+                if (shouldMoveHawkLeft) {
+                    let hawkXPos = hawk.getXPos();
+                    if (hawkXPos > 380) {
+                        if (hawkXPos < 420) {
+                            if (dinoYPos > 2) {
+                                if (~didGameOver) {
+                                    do Output.printString("GAME OVER ->");
+                                    do Output.printInt(cactusCounter);
+                                    let didGameOver = true;
+                                    do cactus.erase();
+                                    do dino.dispose();
+                                    let shouldMoveHawkLeft = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 do Screen.setColor(false);
                 do Screen.drawRectangle(1, 230, 510, 232);
                 do Screen.setColor(true);
@@ -77,7 +105,20 @@ class DinoGame {
 
                 if (450 - cactusXPos < 10) {
                     do cactus.erase();
-                    do cactus.setXPos(0);
+                    if (cactusCounter < 2) {
+                        do cactus.setXPos(0);
+                    }
+                    let cactusCounter = cactusCounter + 1;
+                    if (cactusCounter > 1) {
+                        do hawk.draw();
+                        let shouldMoveHawkLeft = true;
+                        let shouldMoveCactusLeft = false;
+                    }
+                }
+
+                if (450 - hawkXPos < 10) {
+                    do hawk.erase();
+                    do hawk.setXPos(0);
                 }
 
             }
@@ -88,17 +129,18 @@ class DinoGame {
             // waits for the key to be released
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
-                if (didItPrintGameOver){
+                if (didGameOver){
                     do Screen.clearScreen();
                     do dino.setYPos(0);
                     do cactus.setXPos(0);
-                    let didItPrintGameOver = false;
-                    let shouldMoveLeft = true;
+                    let didGameOver = false;
+                    let shouldMoveCactusLeft = true;
+                    // let cactusCounter = 0;
                 }
                             
             }
         } // while
-        return;
+        return cactusCounter;
     }
 
     method void dispose() {
