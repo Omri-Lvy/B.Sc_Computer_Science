@@ -8,6 +8,7 @@ class DinoGame {
     field boolean jump;
     field int cactusXPos;
     field int dinoYPos;
+    field int score;
 
     constructor DinoGame new() {
         do Screen.setColor(true);
@@ -17,15 +18,15 @@ class DinoGame {
         // let hawk = Hawk.new(50);
         let jump = false;
         let gravity = false;
+        let score = 9;
         return this;
     }
 
-    method void run() {
+    method int run() {
         var char key;  // the key currently pressed by the user
         var boolean exit;
+        var boolean didItPrintGameOver;
         var boolean shouldMoveLeft;
-        var boolean didItPrintGameOver;
-        var boolean didItPrintGameOver;
 
         let cactusXPos = 0;
         let dinoYPos = 0;
@@ -47,15 +48,9 @@ class DinoGame {
                 if (cactusXPos > 380) {
                     if (cactusXPos < 420) {
                         if (dinoYPos < 35) {
-                            if (~didItPrintGameOver) {
-                                do Output.printString("GAME OVER ->");
-                                do Output.printInt(dinoYPos);
-                                do Output.printInt(cactusXPos);
-                                let didItPrintGameOver = true;
-                                do cactus.erase();
-                                do dino.dispose();
-                                let shouldMoveLeft = false;
-                            }
+                            do cactus.erase();
+                            do dino.dispose();
+                            return score;
                         }
                     }
                 }
@@ -87,18 +82,10 @@ class DinoGame {
             }
             // waits for the key to be released
             while (~(key = 0)) {
-                let key = Keyboard.keyPressed();
-                if (didItPrintGameOver){
-                    do Screen.clearScreen();
-                    do dino.setYPos(0);
-                    do cactus.setXPos(0);
-                    let didItPrintGameOver = false;
-                    let shouldMoveLeft = true;
-                }
-                            
+                let key = Keyboard.keyPressed();                            
             }
         } // while
-        return;
+        return score;
     }
 
     method void dispose() {

@@ -2,9 +2,46 @@
 class Main {
     function void main() {
         var DinoGame game;
+        var boolean didItPrintGameOver;
+        var int score;
+        var char key;
+        var boolean exit;
+        var boolean reset;
+        let exit = false;
+        let reset = false;
+        let didItPrintGameOver = false;
         let game = DinoGame.new();
-        do game.run();
-        do game.dispose();
+        let score = game.run();
+        while (~didItPrintGameOver) {
+            let didItPrintGameOver = true;
+            do Screen.clearScreen();
+            do Output.moveCursor(0, 0);
+            do Output.printString("GAME OVER");
+            do Output.println();
+            do Output.println();
+            do Output.printString("Score: ");
+            do Output.printInt(score);
+            do Output.println();
+            do Output.println();
+            do Output.printString("Click Space to Reset or q for quit");
+            while (~(key = 32 | key = 81) & didItPrintGameOver) {
+                let key = Keyboard.keyPressed();
+                if (key = 81) {
+                    do game.dispose();
+                    return;
+                }
+                if (key = 32) {
+                    do Screen.clearScreen();
+                    do game.dispose();
+                    let didItPrintGameOver = false;
+                }
+            }
+            if (~(didItPrintGameOver)) {
+                let game = DinoGame.new();
+                let score = game.run();
+            }
+        }
+        do game.dispose(); 
         return;
     }
 }
