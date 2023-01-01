@@ -6,7 +6,6 @@ class DinoGame {
     field Hawk hawk;
     field boolean gravity;
     field boolean jump;
-    field boolean over;
     field int cactusXPos;
     field int dinoYPos;
 
@@ -24,35 +23,43 @@ class DinoGame {
     method void run() {
         var char key;  // the key currently pressed by the user
         var boolean exit;
+        var boolean shouldMoveLeft;
+        var boolean didItPrintGameOver;
+        var boolean didItPrintGameOver;
+
         let cactusXPos = 0;
         let dinoYPos = 0;
         let exit = false;
-        let over = false;
+        let shouldMoveLeft = true;
+        let didItPrintGameOver = false;
       
         while (~exit) {
             //  waits for a key to be pressed
-            // do Screen.setColor(false);
-            // do Screen.drawRectangle(200, 100, 510, 140);
             while (key = 0) {
                 let key = Keyboard.keyPressed();
-                do cactus.moveLeft();
+                if (shouldMoveLeft) {
+                    do cactus.moveLeft();
+                }
                 do dino.jump(jump);
                 do dino.gravity(gravity);
-                // TODO: BUG when we click twick on jump
+                // TODO: BUG when we click twice on jump
 
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
                 if (cactusXPos > 380) {
                     if (cactusXPos < 420) {
                         if (dinoYPos < 35) {
-                            do Output.printString("SHI->");
-                            do Output.printInt(dinoYPos);
-                            do Output.printInt(cactusXPos);
-                            // let exit = true;
+                            if (~didItPrintGameOver) {
+                                do Output.printString("GAME OVER ->");
+                                do Output.printInt(dinoYPos);
+                                do Output.printInt(cactusXPos);
+                                let didItPrintGameOver = true;
+                                do cactus.erase();
+                                do dino.dispose();
+                                let shouldMoveLeft = false;
+                            }
                         }
                     }
-                    // do Screen.setColor(true);
-                    // do Screen.drawRectangle(200, 100, 510, 140);
                 }
                 do Screen.setColor(false);
                 do Screen.drawRectangle(1, 230, 510, 232);
@@ -81,6 +88,14 @@ class DinoGame {
             // waits for the key to be released
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();
+                if (didItPrintGameOver){
+                    do Screen.clearScreen();
+                    do dino.setYPos(0);
+                    do cactus.setXPos(0);
+                    let didItPrintGameOver = false;
+                    let shouldMoveLeft = true;
+                }
+                            
             }
         } // while
         return;
