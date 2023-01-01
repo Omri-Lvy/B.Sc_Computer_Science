@@ -9,6 +9,7 @@ class DinoGame {
     field int cactusXPos;
     field int hawkXPos;
     field int dinoYPos;
+    field int score;
 
     constructor DinoGame new() {
         do Screen.setColor(true);
@@ -18,6 +19,7 @@ class DinoGame {
         let hawk = Hawk.new(50);
         let jump = false;
         let gravity = false;
+        let score = 9;
         return this;
     }
 
@@ -53,37 +55,26 @@ class DinoGame {
 
                 do dino.jump(jump);
                 do dino.gravity(gravity);
-
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
                 if (cactusXPos > 380) {
                     if (cactusXPos < 420) {
                         if (dinoYPos < 35) {
-                            if (~didGameOver) {
-                                do Output.printString("GAME OVER ->");
-                                do Output.printInt(cactusCounter);
-                                let didGameOver = true;
-                                do cactus.erase();
-                                do dino.dispose();
-                                let shouldMoveCactusLeft = false;
-                            }
+                            do cactus.erase();
+                            do dino.dispose();
+                            return score;
                         }
                     }
                 }
-                
+
                 if (shouldMoveHawkLeft) {
                     let hawkXPos = hawk.getXPos();
                     if (hawkXPos > 380) {
                         if (hawkXPos < 420) {
                             if (dinoYPos > 2) {
-                                if (~didGameOver) {
-                                    do Output.printString("GAME OVER ->");
-                                    do Output.printInt(cactusCounter);
-                                    let didGameOver = true;
-                                    do cactus.erase();
-                                    do dino.dispose();
-                                    let shouldMoveHawkLeft = false;
-                                }
+                                do cactus.erase();
+                                do dino.dispose();
+                                return score;
                             }
                         }
                     }
@@ -119,28 +110,22 @@ class DinoGame {
                 if (450 - hawkXPos < 10) {
                     do hawk.erase();
                     do hawk.setXPos(0);
+                    let cactusCounter = cactusCounter + 1;
                 }
 
             }
 
             if (key = 81)  { let exit = true; }// q key
-            if (key = 131) { let jump = true; }// up arrow
-            if (key = 32) { let jump = true; }// space key
+            if (~gravity) {
+                if (key = 131) { let jump = true; }// up arrow
+                if (key = 32) { let jump = true; }// space key
+            }
             // waits for the key to be released
             while (~(key = 0)) {
-                let key = Keyboard.keyPressed();
-                if (didGameOver){
-                    do Screen.clearScreen();
-                    do dino.setYPos(0);
-                    do cactus.setXPos(0);
-                    let didGameOver = false;
-                    let shouldMoveCactusLeft = true;
-                    // let cactusCounter = 0;
-                }
-                            
+                let key = Keyboard.keyPressed();                            
             }
         } // while
-        return cactusCounter;
+        return score;
     }
 
     method void dispose() {
