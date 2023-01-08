@@ -1,15 +1,11 @@
 class Hawk {
 
-    field int x, y; // screen location of the hawk's top-left corner
-    field int size; // length of this hawk, in pixels
     field Memory memAddress;
     field int xPos;
 
     /** Constructs a new hawk with a given location and size. */
-    constructor Hawk new(int Asize) {
-        let x = 0;
-        let y = 0;
-        let size = Asize;
+    constructor Hawk new() {
+        let xPos = 0;
         return this;
     }
 
