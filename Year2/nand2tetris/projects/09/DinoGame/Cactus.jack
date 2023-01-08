@@ -1,14 +1,12 @@
 class Cactus {
 
    field int xPos;
-   field int size; // length of this cactus, in pixels
    field Memory memAddress;
 
 
    /** Constructs a new cactus with a given location and size. */
-   constructor Cactus new(int Asize) {
+   constructor Cactus new() {
       let xPos = 0;
-      let size = Asize;
       do draw();
       return this;
    }
@@ -45,11 +43,6 @@ class Cactus {
       do Screen.drawRectangle(465, 200, 480, 205); //(W1, L1, W2, L2)
       do Screen.drawRectangle(470, 195, 475, 200); //(W1, L1, W2, L2)
 
-      // old top part
-      // do Screen.drawRectangle(465, 195, 480, 200); //(W1, L1, W2, L2)
-      // do Screen.drawRectangle(465, 190, 480, 195); //(W1, L1, W2, L2)
-      // do Screen.drawRectangle(470, 185, 475, 190); //(W1, L1, W2, L2)
-
       // right arm
       do Screen.drawRectangle(455, 210, 465, 215); //(W1, L1, W2, L2)
       do Screen.drawRectangle(450, 205, 460, 210); //(W1, L1, W2, L2)
@@ -67,6 +60,8 @@ class Cactus {
    /** Erases the cactus from the screen. */
    method void erase() {
       do Screen.setColor(false);
+   
+      // main structure
       do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
@@ -91,6 +86,7 @@ class Cactus {
    method void moveLeft() {
       do Screen.setColor(false);
    
+      // main structure
       do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
@@ -113,7 +109,8 @@ class Cactus {
       let xPos = xPos + 2;
 
       do Screen.setColor(true);
-   
+
+      // main structure
       do Screen.drawRectangle(465 - xPos, 225, 480 - xPos, 230); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 220, 480 - xPos, 225); //(W1, L1, W2, L2)
       do Screen.drawRectangle(465 - xPos, 215, 480 - xPos, 220); //(W1, L1, W2, L2)
@@ -135,26 +132,6 @@ class Cactus {
       do Screen.drawRectangle(485 - xPos, 205, 490 - xPos, 210); //(W1, L1, W2, L2)
       do Sys.wait(7);
 
-      do Screen.setColor(false);
-      do Screen.drawRectangle(465 - 310, 225, 480 - 310, 230); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(465 - 310, 220, 480 - 310, 225); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(465 - 310, 215, 480 - 310, 220); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(465 - 310, 210, 480 - 310, 215); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(465 - 310, 205, 480 - 310, 210); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(465 - 310, 200, 480 - 310, 205); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(470 - 310, 195, 475 - 310, 200); //(W1, L1, W2, L2)
-
-      // right arm
-      do Screen.drawRectangle(455 - 310, 210, 465 - 310, 215); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(450 - 310, 205, 460 - 310, 210); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(450 - 310, 200, 460 - 310, 205); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(455 - 310, 195, 460 - 310, 200); //(W1, L1, W2, L2)
-
-      // left arm
-      do Screen.drawRectangle(480 - 310, 215, 490 - 310, 220); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(485 - 310, 210, 490 - 310, 215); //(W1, L1, W2, L2)
-      do Screen.drawRectangle(485 - 310, 205, 490 - 310, 210); //(W1, L1, W2, L2)
-      do Sys.wait(7);
       return;
    }
 }

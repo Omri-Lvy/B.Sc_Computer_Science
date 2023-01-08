@@ -9,63 +9,67 @@ class DinoGame {
     field int cactusXPos;
     field int hawkXPos;
     field int dinoYPos;
-    field int score;
 
     constructor DinoGame new() {
         do Screen.setColor(true);
         do Screen.drawRectangle(1, 230, 510, 232);
         let dino = Dino.new();
-        let cactus = Cactus.new(50);
-        let hawk = Hawk.new(50);
+        let cactus = Cactus.new();
+        let hawk = Hawk.new();
         let jump = false;
         let gravity = false;
-        let score = 9;
         return this;
     }
 
     method int run() {
-        var char key;  // the key currently pressed by the user
+        var char key;
         var boolean exit;
         var boolean shouldMoveCactusLeft;
         var boolean shouldMoveHawkLeft;
-        var boolean didGameOver;
         var int obstacleCounter;
         var int hawkCounter;
-        var boolean isMultOf5;
 
-        let cactusXPos = 0;
-        let hawkXPos = 0;
-        let obstacleCounter = 0;
+
+
+        let cactusXPos = 0; // current cactus position (x scale)
+        let hawkXPos = 0; // current hawk position (x scale)
+        let obstacleCounter = 0; // current obsticle passed counter
         let hawkCounter = 0;
-        let dinoYPos = 0;
+        let dinoYPos = 0; // current dino position (y scale)
         let exit = false;
         let shouldMoveCactusLeft = true;
         let shouldMoveHawkLeft = false;
-        let didGameOver = false;
-        let isMultOf5 = false;
         
       
         while (~exit) {
             //  waits for a key to be pressed
-            while (key = 0) {
+            while (key = 0) { // animation running when there is no user i/o
                 let key = Keyboard.keyPressed();
+
+                // we want to move only if there is no hawk
                 if (shouldMoveCactusLeft) {
                     do cactus.moveLeft();
                 }
 
+                // we want to move only if there is no cactus
                 if (shouldMoveHawkLeft) {
                     do hawk.moveLeft();
                 }
 
+                // animate dino jump with gravity like
                 do dino.jump(jump);
                 do dino.gravity(gravity);
+
                 let dinoYPos = dino.getYPos();
                 let cactusXPos = cactus.getXPos();
                 let hawkXPos = hawk.getXPos();
-
+                    
+                // check if cactus in dino area
                 if (cactusXPos > 360) {
                     if (cactusXPos < 440) {
+                        // check if dino high enough to go over cactus
                         if (dinoYPos < 35) {
+                            // dino was not able to jump - > game over
                             do cactus.erase();
                             do dino.erase();
                             return obstacleCounter;
@@ -73,6 +77,7 @@ class DinoGame {
                     }
                 }
 
+                // same as cactus
                 if (shouldMoveHawkLeft) {
                     if (hawkXPos > 340) {
                         if (hawkXPos < 420) {
@@ -85,20 +90,26 @@ class DinoGame {
                     }
                 }
                 
+                // frame stuff
                 do Screen.setColor(false);
                 do Screen.drawRectangle(1, 230, 510, 232);
                 do Screen.setColor(true);
                 do Screen.drawRectangle(1, 230, 510, 232);
+
+                // dont jump if dino coming down
                 if (dinoYPos < 0) {
                     let jump = false;
                     let gravity = false;
                 }
 
+                // dont jump if dino is at the top
                 if (dinoYPos > 80) {
                     let jump = false;
                     let gravity = true;
                 }
 
+                // erase cactus and add to counter once they reach end of screen
+                // if 5 has been passed send 1 hawk
                 if (450 - cactusXPos < 10) {
                     do cactus.erase();
 
@@ -132,6 +143,7 @@ class DinoGame {
                 if (key = 131) { let jump = true; }// up arrow
                 if (key = 32) { let jump = true; }// space key
             }
+
             // waits for the key to be released
             while (~(key = 0)) {
                 let key = Keyboard.keyPressed();                            
