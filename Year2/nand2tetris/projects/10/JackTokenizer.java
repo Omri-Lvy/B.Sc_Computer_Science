@@ -28,57 +28,52 @@ public class JackTokenizer {
 
     public void advance(){}
 
-    public String tokenType(String token) {
-        if (token.length() == 0) {
-            return "";
-        }
-
+    public TokenTypeEnum tokenType(String token) {
         if (isKeyword(token)) {
-            return "keyword";
+            return TokenTypeEnum.KEYWORD;
         }
 
         if (token.length() < 2 & isSymbol(token.charAt(0))) {
-            return "symbol";
+            return TokenTypeEnum.SYMBOL;
         }
 
         if (isIdentifier(token)) {
-            return "identifier";
+            return TokenTypeEnum.IDENTIFIER;
         }
 
         if (isIntValue(Integer.valueOf(token))) {
-            return "integerConstant";
+            return TokenTypeEnum.INT_CONST;
         }
 
         if (isStringVal(token)) {
-            return "StringConstant";
+            return TokenTypeEnum.STRING_CONST;
         }
-        return "";
+        return null;
     }
 
-    public boolean isKeyword(String key) {
-        List<String> KEYWORD_LIST = Arrays.asList(new String[] {"class", "constructor", "function",
-        "method", "field", "static", "var", "int",
-        "char", "boolean", "void", "true", "false",
-        "null", "this", "let", "do", "if", "else",
-        "while", "return" });
-        return KEYWORD_LIST.contains(key);
+    private boolean isKeyword(String key) {
+        return Arrays.stream(KeywordsEnum.values()).toList().contains(key);
     }
 
     public KeywordsEnum keyWord() {
         return null;
     }
+    private boolean isSymbol(char symbol) {
+    List<Character> SYMBOL_LIST = Arrays.asList(new Character[] { '{' , '}' , '(' , ')' , '[' , ']' , '.' , ',' , ';' , '+' , '-' , '*' ,
+    '/', '&' , ',' , '<' , '>' , '=' , '~' });
+    return SYMBOL_LIST.contains(symbol);
+    }
 
-    public boolean isSymbol(Character symbol) {
-        List<Character> SYMBOL_LIST = Arrays.asList(new Character[] { '{' , '}' , '(' , ')' , '[' , ']' , '.' , ',' , ';' , '+' , '-' , '*' ,
-        '/', '&' , ',' , '<' , '>' , '=' , '~' });
-        return SYMBOL_LIST.contains(symbol);
+    private boolean isSymbol(int intValue) {
+        String pattern = "^(327[0-5]|327[0-4][0-9]|3[0-1][0-9]{3}|[1-9][0-9]{0,3}|0)$";
+        return String.valueOf(intValue).matches(pattern);
     }
 
     public char symbol() {
         return 'a';
     }
 
-    public boolean isIdentifier(String identifier) {
+    private boolean isIdentifier(String identifier) {
         String pattern = "^[a-zA-Z_][a-zA-Z0-9_]*";
         return identifier.matches(pattern);
     }
@@ -87,7 +82,7 @@ public class JackTokenizer {
         return "a";
     }
 
-    public boolean isIntValue(int intValue) {
+    private boolean isIntValue(int intValue) {
         String pattern = "^(327[0-5]|327[0-4][0-9]|3[0-1][0-9]{3}|[1-9][0-9]{0,3}|0)$";
         return String.valueOf(intValue).matches(pattern);
     }
