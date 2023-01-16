@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class JackAnalyzer {
-
     public static void main (String[] args) throws IOException {
         FileFilter fileFilter = pathname -> pathname.getName().endsWith(".jack");
         File[] filesList = new File(args[0]).isDirectory() ? new File(args[0]).listFiles(fileFilter) : new File[]{ new File(args[0]) };
