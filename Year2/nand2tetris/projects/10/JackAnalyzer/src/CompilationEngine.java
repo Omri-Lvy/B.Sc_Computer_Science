@@ -7,23 +7,54 @@ public class CompilationEngine {
 
 
     private JackTokenizer jackTokenizer;
-    FileWriter outFile;
+    private FileWriter outFile;
+    private String token;
+    private TokenTypeEnum type;
 
     //Creates a new compilation engine with the given input and output
     public CompilationEngine (File input, FileWriter output) throws FileNotFoundException {
         jackTokenizer = new JackTokenizer(input);
         jackTokenizer.advance();
         outFile = output;
+        token = jackTokenizer.getToken();
+        type = jackTokenizer.tokenType(token);
     }
 
     //Compiles  a complete class
-    public void compileClass() throws IOException {
+    public void compileClass() throws Exception {
         outFile.write("<class>\n");
-        String token = jackTokenizer.getToken();
-        TokenTypeEnum type = jackTokenizer.tokenType(token);
-
+        if (type != TokenTypeEnum.KEYWORD || !token.equals("class")) {
+            throw new Exception("Syntax Error");
+        }
+        outFile.write("<keyword> ");
+        outFile.write(token);
+        outFile.write(" </keyword>\n");
+        jackTokenizer.advance();
+        token = jackTokenizer.getToken();
+        type = jackTokenizer.tokenType(token);
+        if (type != TokenTypeEnum.IDENTIFIER) {
+            throw new Exception("Syntax Error");
+        }
+        outFile.write("<identifier> ");
+        outFile.write(token);
+        outFile.write(" </identifier>\n");
+        jackTokenizer.advance();
+        token = jackTokenizer.getToken();
+        type = jackTokenizer.tokenType(token);
+        compileParameterList();
+        jackTokenizer.advance();
+        token = jackTokenizer.getToken();
+        type = jackTokenizer.tokenType(token);
+        if (type != TokenTypeEnum.SYMBOL || token.equals("{")) {
+            throw new Exception("Syntax Error");
+        }
+        outFile.write("<symbol> ");
+        outFile.write(token);
+        outFile.write(" </symbol>\n");
+        compileClassVarDec();
 
         outFile.write("</class>\n");
+        outFile.close();
     }
 
     //Compiles a static variable declaration or a field declaration
@@ -33,7 +64,22 @@ public class CompilationEngine {
     public void compileSubroutine() {}
 
     //Compiles a parameter list
-    public void compileParameterList(){}
+    public void compileParameterList() throws Exception {
+        jackTokenizer.advance();
+        token = jackTokenizer.getToken();
+        type = jackTokenizer.tokenType(token);
+        if (type != TokenTypeEnum.SYMBOL || token.equals("(")) {
+            throw new Exception("Syntax Error");
+        }
+        outFile.write("<symbol> ");
+        outFile.write(token);
+        outFile.write(" </symbol>\n");
+        jackTokenizer.advance();
+        token = jackTokenizer.getToken();
+        while(!token.equals(")")) {
+
+        }
+    }
 
     //Compiles a subroutine's body
     public void compilerSubroutineBody() {}

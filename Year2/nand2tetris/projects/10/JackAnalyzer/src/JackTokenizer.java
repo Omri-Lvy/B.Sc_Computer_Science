@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JackTokenizer {
 
@@ -13,6 +15,8 @@ public class JackTokenizer {
     private int position;
     private List<Character> SYMBOL_LIST = Arrays.asList(new Character[]{ '{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*',
             '/', '&', ',', '<', '>', '=', '~' });
+    private String stringConstant = "";
+    private boolean stringConstantBuilder = false;
 
     public JackTokenizer (File inputFile) throws FileNotFoundException {
         position = 0;
@@ -27,8 +31,12 @@ public class JackTokenizer {
                 line = file.nextLine();
             }
             if (!line.equals("")) {
-                String[] wards = line.split(" ");
-                for (String word : wards) {
+                stringConstant = "";
+                String[] words = line.split(" ");
+                for (String word : words) {
+                    if (stringConstantBuilder) {
+                        stringConstant += " ";
+                    }
                     splitSymbols(word);
                 }
             }
@@ -40,9 +48,24 @@ public class JackTokenizer {
         int lastIndex = 0;
         boolean inserted = false;
         for (char c: word.toCharArray()) {
-            if (SYMBOL_LIST.contains(c)) {
+            if (c == '"') {
+                if (!stringConstantBuilder) {
+                    stringConstant += ""+c;
+                    stringConstantBuilder = true;
+                }
+                else {
+                    stringConstant += ""+c;
+                    stringConstantBuilder = false;
+                    tokens.add(stringConstant);
+                }
+
+            }
+            else if (stringConstantBuilder) {
+                stringConstant += ""+c;
+            }
+            else if (SYMBOL_LIST.contains(c)) {
                 String tkn = word.substring(lastIndex,word.indexOf(c));
-                if (!tkn.equals("")) {
+                if (!tkn.equals("") && !tkn.equals("\"")) {
                     tokens.add(tkn);
                 }
                 tokens.add(""+c);
@@ -50,7 +73,7 @@ public class JackTokenizer {
                 inserted = true;
             }
         }
-        if (!inserted) {
+        if (!inserted && !stringConstantBuilder) {
             tokens.add(word);
         }
     }
@@ -79,7 +102,7 @@ public class JackTokenizer {
     }
 
     private boolean isStringVal (String stringVal) {
-        String pattern = "[^\"\n]*";
+        String pattern = "\".*\"";
         return stringVal.matches(pattern);
     }
 
@@ -91,20 +114,20 @@ public class JackTokenizer {
         if (isSymbol(token.charAt(0))) {
             return TokenTypeEnum.SYMBOL;
         }
-        if (isIdentifier(token)) {
-            return TokenTypeEnum.IDENTIFIER;
-        }
         if (isIntValue(Integer.valueOf(token))) {
             return TokenTypeEnum.INT_CONST;
         }
         if (isStringVal(token)) {
             return TokenTypeEnum.STRING_CONST;
         }
+        if (isIdentifier(token)) {
+            return TokenTypeEnum.IDENTIFIER;
+        }
         return null;
     }
 
     public String stringVal () {
-        return token;
+        return token.replaceAll("\"","");
     }
 
     public String keyWord () {
