@@ -43,9 +43,11 @@ public class JackTokenizer {
     }
 
     private void splitSymbols (String word) {
-        int lastIndex = 0;
+        if (word.equals("")) {
+            return;
+        }
         boolean inserted = false;
-        String tkn = "";
+        String tkn = word;
         for (char c : word.toCharArray()) {
             if (c == '"') {
                 if (!stringConstantBuilder) {
@@ -60,14 +62,17 @@ public class JackTokenizer {
             } else if (stringConstantBuilder) {
                 stringConstant += "" + c;
             } else if (SYMBOL_LIST.contains(c)) {
-                tkn  = word.substring(word.indexOf(c));
+                tkn  = word.substring(0,word.indexOf(c));
                 if (!tkn.equals("") && !tkn.equals("\"") && !tkn.equals(""+c)) {
                     tokens.add(tkn);
                 }
                 tokens.add("" + c);
-                word = word.substring(word.indexOf(c));
+                word = word.substring(word.indexOf(c)+1);
                 inserted = true;
             }
+        }
+        if(!word.equals(tkn) && !word.equals("")){
+            tokens.add(word);
         }
         if (!inserted && !stringConstantBuilder) {
             tokens.add(word);
@@ -181,5 +186,9 @@ public class JackTokenizer {
 
     public String getToken () {
         return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

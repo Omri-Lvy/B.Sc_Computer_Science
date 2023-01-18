@@ -33,4 +33,11 @@ public class Tests {
         engine.compileClass();
     }
 
+    @Test
+    public void isIdentifierTest() throws FileNotFoundException {
+        tokenizer = new JackTokenizer(testFile);
+        tokenizer.setToken("y");
+        System.out.println(tokenizer.tokenType().getType());
+    }
+
 }
