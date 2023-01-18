@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JackTokenizer {
 
@@ -44,32 +42,29 @@ public class JackTokenizer {
 
     }
 
-    private void splitSymbols(String word) {
+    private void splitSymbols (String word) {
         int lastIndex = 0;
         boolean inserted = false;
-        for (char c: word.toCharArray()) {
+        for (char c : word.toCharArray()) {
             if (c == '"') {
                 if (!stringConstantBuilder) {
-                    stringConstant += ""+c;
+                    stringConstant += "" + c;
                     stringConstantBuilder = true;
-                }
-                else {
-                    stringConstant += ""+c;
+                } else {
+                    stringConstant += "" + c;
                     stringConstantBuilder = false;
                     tokens.add(stringConstant);
                 }
 
-            }
-            else if (stringConstantBuilder) {
-                stringConstant += ""+c;
-            }
-            else if (SYMBOL_LIST.contains(c)) {
-                String tkn = word.substring(lastIndex,word.indexOf(c));
+            } else if (stringConstantBuilder) {
+                stringConstant += "" + c;
+            } else if (SYMBOL_LIST.contains(c)) {
+                String tkn = word.substring(lastIndex, word.indexOf(c));
                 if (!tkn.equals("") && !tkn.equals("\"")) {
                     tokens.add(tkn);
                 }
-                tokens.add(""+c);
-                lastIndex = word.indexOf(c)+1;
+                tokens.add("" + c);
+                lastIndex = word.indexOf(c) + 1;
                 inserted = true;
             }
         }
@@ -107,16 +102,19 @@ public class JackTokenizer {
     }
 
 
-    public TokenTypeEnum tokenType (String token) {
+    public TokenTypeEnum tokenType () {
         if (isKeyword(token)) {
             return TokenTypeEnum.KEYWORD;
         }
         if (isSymbol(token.charAt(0))) {
             return TokenTypeEnum.SYMBOL;
         }
-        if (isIntValue(Integer.valueOf(token))) {
-            return TokenTypeEnum.INT_CONST;
+        try {
+            if (isIntValue(Integer.valueOf(token))) {
+                return TokenTypeEnum.INT_CONST;
+            }
         }
+        catch (Exception e) {}
         if (isStringVal(token)) {
             return TokenTypeEnum.STRING_CONST;
         }
@@ -127,11 +125,11 @@ public class JackTokenizer {
     }
 
     public String stringVal () {
-        return token.replaceAll("\"","");
+        return token.replaceAll("\"", "");
     }
 
-    public String keyWord () {
-        return KeywordsEnum.valueOf(token).getType();
+    public KeywordsEnum keyWord () {
+        return KeywordsEnum.valueOf(token.toUpperCase());
     }
 
     public int intVal () {
@@ -158,5 +156,4 @@ public class JackTokenizer {
     public String getToken () {
         return token;
     }
-
 }

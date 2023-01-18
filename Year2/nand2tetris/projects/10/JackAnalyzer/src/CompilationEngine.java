@@ -14,71 +14,67 @@ public class CompilationEngine {
     //Creates a new compilation engine with the given input and output
     public CompilationEngine (File input, FileWriter output) throws FileNotFoundException {
         jackTokenizer = new JackTokenizer(input);
-        jackTokenizer.advance();
+
         outFile = output;
-        token = jackTokenizer.getToken();
-        type = jackTokenizer.tokenType(token);
     }
 
     //Compiles  a complete class
     public void compileClass() throws Exception {
+        jackTokenizer.advance();
         outFile.write("<class>\n");
-        if (type != TokenTypeEnum.KEYWORD || !token.equals("class")) {
+        if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || !jackTokenizer.keyWord().getType().equals("class")) {
             throw new Exception("Syntax Error");
         }
         outFile.write("<keyword> ");
-        outFile.write(token);
+        outFile.write(jackTokenizer.keyWord().getType());
         outFile.write(" </keyword>\n");
         jackTokenizer.advance();
-        token = jackTokenizer.getToken();
-        type = jackTokenizer.tokenType(token);
-        if (type != TokenTypeEnum.IDENTIFIER) {
+        if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
         outFile.write("<identifier> ");
-        outFile.write(token);
+        outFile.write(jackTokenizer.identifier());
         outFile.write(" </identifier>\n");
         jackTokenizer.advance();
-        token = jackTokenizer.getToken();
-        type = jackTokenizer.tokenType(token);
-        compileParameterList();
-        jackTokenizer.advance();
-        token = jackTokenizer.getToken();
-        type = jackTokenizer.tokenType(token);
-        if (type != TokenTypeEnum.SYMBOL || token.equals("{")) {
+        if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
             throw new Exception("Syntax Error");
         }
         outFile.write("<symbol> ");
-        outFile.write(token);
+        outFile.write(jackTokenizer.symbol());
         outFile.write(" </symbol>\n");
-        compileClassVarDec();
-
+        jackTokenizer.advance();
+        while (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD) {
+            if (jackTokenizer.keyWord().equals("static") || jackTokenizer.keyWord().equals("field")) {
+                compileClassVarDec();
+            }
+            else if(jackTokenizer.keyWord().equals("constructor") || jackTokenizer.keyWord().equals("method") || jackTokenizer.keyWord().equals("function")) {
+                compileSubroutine();
+            }
+            jackTokenizer.advance();
+        }
+        if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != '}') {
+            throw new Exception("Syntax Error");
+        }
+        outFile.write("<symbol> ");
+        outFile.write(jackTokenizer.symbol());
+        outFile.write(" </symbol>\n");
         outFile.write("</class>\n");
         outFile.close();
     }
 
     //Compiles a static variable declaration or a field declaration
-    public void compileClassVarDec() {}
+    public void compileClassVarDec() {
+        System.out.println(jackTokenizer.getToken());
+    }
 
     //Compiles a complete method, function or constructor
-    public void compileSubroutine() {}
+    public void compileSubroutine() {
+        System.out.println(jackTokenizer.getToken());
+    }
 
     //Compiles a parameter list
     public void compileParameterList() throws Exception {
-        jackTokenizer.advance();
-        token = jackTokenizer.getToken();
-        type = jackTokenizer.tokenType(token);
-        if (type != TokenTypeEnum.SYMBOL || token.equals("(")) {
-            throw new Exception("Syntax Error");
-        }
-        outFile.write("<symbol> ");
-        outFile.write(token);
-        outFile.write(" </symbol>\n");
-        jackTokenizer.advance();
-        token = jackTokenizer.getToken();
-        while(!token.equals(")")) {
 
-        }
     }
 
     //Compiles a subroutine's body
