@@ -45,6 +45,7 @@ public class JackTokenizer {
     private void splitSymbols (String word) {
         int lastIndex = 0;
         boolean inserted = false;
+        String tkn = "";
         for (char c : word.toCharArray()) {
             if (c == '"') {
                 if (!stringConstantBuilder) {
@@ -59,12 +60,12 @@ public class JackTokenizer {
             } else if (stringConstantBuilder) {
                 stringConstant += "" + c;
             } else if (SYMBOL_LIST.contains(c)) {
-                String tkn = word.substring(lastIndex, word.indexOf(c));
-                if (!tkn.equals("") && !tkn.equals("\"")) {
+                tkn  = word.substring(word.indexOf(c));
+                if (!tkn.equals("") && !tkn.equals("\"") && !tkn.equals(""+c)) {
                     tokens.add(tkn);
                 }
                 tokens.add("" + c);
-                lastIndex = word.indexOf(c) + 1;
+                word = word.substring(word.indexOf(c));
                 inserted = true;
             }
         }
@@ -74,6 +75,7 @@ public class JackTokenizer {
     }
 
     private boolean isKeyword (String key) {
+
         for (KeywordsEnum keyword : KeywordsEnum.values()) {
             if (keyword.getType().equals(key))
                 return true;
@@ -123,26 +125,26 @@ public class JackTokenizer {
         return null;
     }
 
-    public String isReturningIntBoolCharVoid () {
+    public KeywordsEnum isReturningIntBoolCharVoid () {
         String boolType = KeywordsEnum.BOOLEAN.getType();
         String intType = KeywordsEnum.INT.getType();
         String charType = KeywordsEnum.CHAR.getType();
         String voidType = KeywordsEnum.VOID.getType();
 
-        if (token == boolType) {
-            return boolType;
+        if (token.equals(boolType)) {
+            return KeywordsEnum.BOOLEAN;
         }
 
-        if (token == intType) {
-            return intType;
+        if (token.equals(intType)) {
+            return KeywordsEnum.INT;
         }
 
-        if (token == charType) {
-            return charType;
+        if (token.equals(charType)) {
+            return KeywordsEnum.CHAR;
         }
 
-        if (token == voidType) {
-            return voidType;
+        if (token.equals(voidType)) {
+            return KeywordsEnum.VOID;
         }
 
         return null;

@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class Tests {
 
-    File testFile = new File("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/ArrayTest/Main.jack");
-    FileWriter testOut = new FileWriter("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/ArrayTest/MainTest.xml");
+    File testFile = new File("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Square/Square.jack");
+    FileWriter testOut = new FileWriter("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Square/SquareTest.xml");
 
 
     private JackTokenizer tokenizer;
