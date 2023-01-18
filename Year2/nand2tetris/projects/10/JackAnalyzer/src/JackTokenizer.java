@@ -85,7 +85,6 @@ public class JackTokenizer {
         return SYMBOL_LIST.contains(symbol);
     }
 
-
     private boolean isIdentifier (String identifier) {
         String pattern = "^[a-zA-Z_][a-zA-Z0-9_]*";
         return identifier.matches(pattern);
@@ -121,6 +120,31 @@ public class JackTokenizer {
         if (isIdentifier(token)) {
             return TokenTypeEnum.IDENTIFIER;
         }
+        return null;
+    }
+
+    public String isReturningIntBoolCharVoid () {
+        String boolType = KeywordsEnum.BOOLEAN.getType();
+        String intType = KeywordsEnum.INT.getType();
+        String charType = KeywordsEnum.CHAR.getType();
+        String voidType = KeywordsEnum.VOID.getType();
+
+        if (token == boolType) {
+            return boolType;
+        }
+
+        if (token == intType) {
+            return intType;
+        }
+
+        if (token == charType) {
+            return charType;
+        }
+
+        if (token == voidType) {
+            return voidType;
+        }
+
         return null;
     }
 

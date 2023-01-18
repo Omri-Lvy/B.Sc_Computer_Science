@@ -1,6 +1,4 @@
 public enum KeywordsEnum {
-
-
     CLASS ("class"),
     METHOD ("method"),
     FUNCTION ("function"),
