@@ -4,6 +4,7 @@
 *.iml
 *.jack
 *.xml
+*.vm
 Linear_Algebra_II
 AdvancedPrograming
 .idea
