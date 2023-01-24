@@ -1,45 +1,42 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class CompilationEngine {
 
 
     private JackTokenizer jackTokenizer;
-    private FileWriter outFile;
+    private VMWriter writer;
+    private SymbolTable classTable;
+    private SymbolTable subRurineTable;
     private String className;
+    private File inputFile;
 
     //Creates a new compilation engine with the given input and output
-    public CompilationEngine (File input, FileWriter output) throws FileNotFoundException {
+    public CompilationEngine (File input, FileWriter output) throws IOException {
+        inputFile = input;
         jackTokenizer = new JackTokenizer(input);
-        outFile = output;
+        writer = new VMWriter(output);
+        classTable = new SymbolTable();
+        subRurineTable = new SymbolTable();
     }
 
     //Compiles  a complete class
     public void compileClass () throws Exception {
         jackTokenizer.advance();
-        outFile.write("<class>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || !jackTokenizer.keyWord().getType().equals("class")) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
         className = jackTokenizer.identifier();
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD && jackTokenizer.hasMoreTokens()) {
             if (jackTokenizer.keyWord() == KeywordsEnum.STATIC || jackTokenizer.keyWord() == KeywordsEnum.FIELD) {
@@ -53,55 +50,38 @@ public class CompilationEngine {
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != '}') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</class>\n");
-        outFile.close();
+        writer.close();
     }
 
     //Compiles a static variable declaration or a field declaration
     public void compileClassVarDec () throws Exception {
         boolean isCommaLast = false;
+        String kind;
+        String type;
+        String name;
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || (jackTokenizer.keyWord() != KeywordsEnum.FIELD && jackTokenizer.keyWord() != KeywordsEnum.STATIC)) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<classVarDec>\n");
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+        kind = jackTokenizer.keyWord().getType();
         jackTokenizer.advance();
-        if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD ||
-                (jackTokenizer.isReturningIntBoolCharVoid() == null ||
-                        jackTokenizer.isReturningIntBoolCharVoid() == KeywordsEnum.VOID)) {
-            if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
-                throw new Exception("Syntax Error");
-            }
-        }
         if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
-            outFile.write("<identifier> ");
-            outFile.write(jackTokenizer.identifier());
-            outFile.write(" </identifier>\n");
+            type = jackTokenizer.identifier();
             jackTokenizer.advance();
         } else {
-            outFile.write("<keyword> ");
-            outFile.write(jackTokenizer.keyWord().getType());
-            outFile.write(" </keyword>\n");
+            type = jackTokenizer.keyWord().getType();
             jackTokenizer.advance();
         }
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
+        name = jackTokenizer.identifier();
+        classTable.define(name,type,kind);
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
             if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
                 if (isCommaLast) {
-                    outFile.write("<identifier> ");
-                    outFile.write(jackTokenizer.identifier());
-                    outFile.write(" </identifier>\n");
+                    name = jackTokenizer.identifier();
+                    classTable.define(name,type,kind);
                     isCommaLast = false;
                 } else {
                     throw new Exception("Syntax Error");
@@ -110,9 +90,6 @@ public class CompilationEngine {
                 if (isCommaLast) {
                     throw new Exception("Syntax Error");
                 } else {
-                    outFile.write("<symbol> ");
-                    outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                    outFile.write(" </symbol>\n");
                     isCommaLast = true;
                 }
             } else {
@@ -123,113 +100,86 @@ public class CompilationEngine {
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</classVarDec>\n");
     }
 
     //Compiles a complete method, function or constructor
     public void compileSubroutine () throws Exception {
+        String functionName;
+        KeywordsEnum funcType;
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD ||
                 (jackTokenizer.keyWord() != KeywordsEnum.CONSTRUCTOR &&
                         jackTokenizer.keyWord() != KeywordsEnum.METHOD &&
                         jackTokenizer.keyWord() != KeywordsEnum.FUNCTION)) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<subroutineDec>\n");
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+        subRurineTable.reset();
+        funcType = jackTokenizer.keyWord();
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD &&
                 jackTokenizer.isReturningIntBoolCharVoid() == null
                 && !jackTokenizer.getToken().equals(className)) {
             throw new Exception("Syntax Error");
         }
-        if (jackTokenizer.getToken().equals(className)) {
-            outFile.write("<identifier> ");
-            outFile.write(jackTokenizer.identifier());
-            outFile.write(" </identifier>\n");
+        jackTokenizer.advance();
+        functionName = jackTokenizer.identifier();
+        jackTokenizer.advance();
+        compileParameterList();
+
+        if (funcType == KeywordsEnum.CONSTRUCTOR) {
+            writer.writeFunction(className+"."+functionName,classTable.varCount("field")+classTable.varCount("static"));
+            writer.writePush("constant",classTable.varCount("field"));
+            writer.writeCall("Memory.alloc",1);
+            writer.writePop("pointer",0);
         } else {
-            outFile.write("<keyword> ");
-            outFile.write(jackTokenizer.keyWord().getType());
-            outFile.write(" </keyword>\n");
+            if (funcType == KeywordsEnum.METHOD) {
+                subRurineTable.define("this",className,SymbolKindEnum.ARG.getKind());
+            }
+            writer.writeFunction(className+"."+functionName,classTable.varCount("field")+classTable.varCount("static"));
+            writer.writePush("argument",0);
+            writer.writePop("pointer",0);
         }
+
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
-        jackTokenizer.advance();
-        compileParameterList();
+
         jackTokenizer.advance();
         compilerSubroutineBody();
-        outFile.write("</subroutineDec>\n");
     }
 
     //Compiles a parameter list
     public void compileParameterList () throws Exception {
-        TokenTypeEnum lastTokenType = TokenTypeEnum.SYMBOL;
+        String varName;
+        String varType;
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '(') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("<parameterList>\n");
         jackTokenizer.advance();
-        while ((jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == ',') ||
-                jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER ||
-                (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD && jackTokenizer.isReturningIntBoolCharVoid() != null && jackTokenizer.isReturningIntBoolCharVoid() != KeywordsEnum.VOID)) {
-            if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
-                if (lastTokenType != TokenTypeEnum.KEYWORD) {
-                    throw new Exception("Syntax Error");
-                }
-                outFile.write("<identifier> ");
-                outFile.write(jackTokenizer.identifier());
-                outFile.write(" </identifier>\n");
-                lastTokenType = TokenTypeEnum.IDENTIFIER;
-            } else if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL) {
-                if (lastTokenType != TokenTypeEnum.IDENTIFIER) {
-                    throw new Exception("Syntax Error");
-                }
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
-                lastTokenType = TokenTypeEnum.SYMBOL;
-            } else if (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD) {
-                if (lastTokenType != TokenTypeEnum.SYMBOL) {
-                    throw new Exception("Syntax Error");
-                }
-                outFile.write("<keyword> ");
-                outFile.write(jackTokenizer.keyWord().getType());
-                outFile.write(" </keyword>\n");
-                lastTokenType = TokenTypeEnum.KEYWORD;
+        while (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == ','){
+            if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
+                throw new Exception("Syntax Error");
             }
+            varType = jackTokenizer.keyWord().getType();
+            jackTokenizer.advance();
+            if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
+                throw new Exception("Syntax Error");
+            }
+            varName = jackTokenizer.identifier();
+            jackTokenizer.advance();
+            subRurineTable.define(varName,varType,"argument");
             jackTokenizer.advance();
         }
-        outFile.write("</parameterList>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ')') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-
     }
 
     //Compiles a subroutine's body
     public void compilerSubroutineBody () throws Exception {
-        outFile.write("<subroutineBody>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
             throw new Exception("Syntax Error");
-        }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+        };
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '}') {
             if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
@@ -245,22 +195,15 @@ public class CompilationEngine {
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '}') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</subroutineBody>\n");
     }
 
     //Compiles var declaration
     public void compileVarDec () throws Exception {
-        outFile.write("<varDec>\n");
-        boolean isCommaLast = false;
+        String varName;
+        String varType;
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD ||
                 (jackTokenizer.isReturningIntBoolCharVoid() == null ||
@@ -269,61 +212,35 @@ public class CompilationEngine {
                 throw new Exception("Syntax Error");
             }
         }
-        if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
-            outFile.write("<identifier> ");
-            outFile.write(jackTokenizer.identifier());
-            outFile.write(" </identifier>\n");
-            jackTokenizer.advance();
-        } else {
-            outFile.write("<keyword> ");
-            outFile.write(jackTokenizer.keyWord().getType());
-            outFile.write(" </keyword>\n");
-            jackTokenizer.advance();
-        }
+        varType = jackTokenizer.keyWord().getType();
+        jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
+        varName = jackTokenizer.identifier();
         jackTokenizer.advance();
+        subRurineTable.define(varName,varType,"local");
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
-            if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
-                if (isCommaLast) {
-                    outFile.write("<identifier> ");
-                    outFile.write(jackTokenizer.identifier());
-                    outFile.write(" </identifier>\n");
-                    isCommaLast = false;
-                } else {
-                    throw new Exception("Syntax Error");
-                }
-            } else if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == ',') {
-                if (isCommaLast) {
-                    throw new Exception("Syntax Error");
-                } else {
-                    outFile.write("<symbol> ");
-                    outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                    outFile.write(" </symbol>\n");
-                    isCommaLast = true;
-                }
-            } else {
+            if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
                 throw new Exception("Syntax Error");
             }
+            varType = jackTokenizer.keyWord().getType();
             jackTokenizer.advance();
+            if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
+                throw new Exception("Syntax Error");
+            }
+            varName = jackTokenizer.identifier();
+            jackTokenizer.advance();
+            subRurineTable.define(varName,varType,"local");
         }
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</varDec>\n");
         jackTokenizer.advance();
     }
 
     //Compiles a sequence of statements
-    public void compileStatements () throws Exception {
-        outFile.write("<statements>\n");
+    public void compileStatements() throws Exception {
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != '}') {
             if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
                 throw new Exception("Syntax Error");
@@ -349,38 +266,37 @@ public class CompilationEngine {
                 jackTokenizer.advance();
             }
         }
-        outFile.write("</statements>\n");
     }
 
     //Compiles a let statement
     public void compileLet () throws Exception {
-        outFile.write("<letStatement>\n");
+//        writer.write("<letStatement>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || jackTokenizer.keyWord() != KeywordsEnum.LET) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+//        writer.write("<keyword> ");
+//        writer.write(jackTokenizer.keyWord().getType());
+//        writer.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
+//        writer.write("<identifier> ");
+//        writer.write(jackTokenizer.identifier());
+//        writer.write(" </identifier>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
             if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL) {
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 jackTokenizer.advance();
                 continue;
             }
@@ -389,180 +305,180 @@ public class CompilationEngine {
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</letStatement>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
+//        writer.write("</letStatement>\n");
     }
 
     //Compiles an if statement
     public void compileIf () throws Exception {
-        outFile.write("<ifStatement>\n");
+//        writer.write("<ifStatement>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || jackTokenizer.keyWord() != KeywordsEnum.IF) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+//        writer.write("<keyword> ");
+//        writer.write(jackTokenizer.keyWord().getType());
+//        writer.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '(') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         compileExpression();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ')') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         compileStatements();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '}') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD && jackTokenizer.keyWord() == KeywordsEnum.ELSE) {
-            outFile.write("<keyword> ");
-            outFile.write(jackTokenizer.keyWord().getType());
-            outFile.write(" </keyword>\n");
+//            writer.write("<keyword> ");
+//            writer.write(jackTokenizer.keyWord().getType());
+//            writer.write(" </keyword>\n");
             jackTokenizer.advance();
             if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
                 throw new Exception("Syntax Error");
             }
-            outFile.write("<symbol> ");
-            outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-            outFile.write(" </symbol>\n");
+//            writer.write("<symbol> ");
+//            writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//            writer.write(" </symbol>\n");
             jackTokenizer.advance();
             compileStatements();
             if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '}') {
                 throw new Exception("Syntax Error");
             }
-            outFile.write("<symbol> ");
-            outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-            outFile.write(" </symbol>\n");
+//            writer.write("<symbol> ");
+//            writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//            writer.write(" </symbol>\n");
             jackTokenizer.advance();
         }
-        outFile.write("</ifStatement>\n");
+//        writer.write("</ifStatement>\n");
     }
 
     //Compiles while statement
     public void compileWhile () throws Exception {
-        outFile.write("<whileStatement>\n");
+//        writer.write("<whileStatement>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || jackTokenizer.keyWord() != KeywordsEnum.WHILE) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+//        writer.write("<keyword> ");
+//        writer.write(jackTokenizer.keyWord().getType());
+//        writer.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '(') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         compileExpression();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ')') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '{') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         compileStatements();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '}') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</whileStatement>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
+//        writer.write("</whileStatement>\n");
     }
 
     //Compiles do statement
     public void compileDo () throws Exception {
-        outFile.write("<doStatement>\n");
+//        writer.write("<doStatement>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || jackTokenizer.keyWord() != KeywordsEnum.DO) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+//        writer.write("<keyword> ");
+//        writer.write(jackTokenizer.keyWord().getType());
+//        writer.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<identifier> ");
-        outFile.write(jackTokenizer.identifier());
-        outFile.write(" </identifier>\n");
+//        writer.write("<identifier> ");
+//        writer.write(jackTokenizer.identifier());
+//        writer.write(" </identifier>\n");
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == '.') {
-            outFile.write("<symbol> ");
-            outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-            outFile.write(" </symbol>\n");
+//            writer.write("<symbol> ");
+//            writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//            writer.write(" </symbol>\n");
             jackTokenizer.advance();
             if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
                 throw new Exception("Syntax Error");
             }
-            outFile.write("<identifier> ");
-            outFile.write(jackTokenizer.identifier());
-            outFile.write(" </identifier>\n");
+//            writer.write("<identifier> ");
+//            writer.write(jackTokenizer.identifier());
+//            writer.write(" </identifier>\n");
             jackTokenizer.advance();
         }
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != '(') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         compileExpressionList();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ')') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</doStatement>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
+//        writer.write("</doStatement>\n");
     }
 
     //Compiles a return statement
     public void compileReturn () throws Exception {
-        outFile.write("<returnStatement>\n");
+//        writer.write("<returnStatement>\n");
         if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD || jackTokenizer.keyWord() != KeywordsEnum.RETURN) {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<keyword> ");
-        outFile.write(jackTokenizer.keyWord().getType());
-        outFile.write(" </keyword>\n");
+//        writer.write("<keyword> ");
+//        writer.write(jackTokenizer.keyWord().getType());
+//        writer.write(" </keyword>\n");
         jackTokenizer.advance();
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != ';') {
             compileExpression();
@@ -570,21 +486,21 @@ public class CompilationEngine {
         if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != ';') {
             throw new Exception("Syntax Error");
         }
-        outFile.write("<symbol> ");
-        outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-        outFile.write(" </symbol>\n");
-        outFile.write("</returnStatement>\n");
+//        writer.write("<symbol> ");
+//        writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//        writer.write(" </symbol>\n");
+//        writer.write("</returnStatement>\n");
     }
 
     //Compiles an expression
     public void compileExpression () throws Exception {
-        outFile.write("<expression>\n");
+//        writer.write("<expression>\n");
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || (jackTokenizer.symbol() != ')' && jackTokenizer.symbol() != ']')) {
             compileTerm();
             if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != ';' && jackTokenizer.symbol() != ',' && jackTokenizer.symbol() != ')' && jackTokenizer.symbol() != ']') {
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 jackTokenizer.advance();
                 compileTerm();
             }
@@ -592,65 +508,65 @@ public class CompilationEngine {
                 break;
             }
         }
-        outFile.write("</expression>\n");
+//        writer.write("</expression>\n");
     }
 
     //Compiles a term
     public void compileTerm () throws Exception {
-        outFile.write("<term>\n");
+//        writer.write("<term>\n");
         if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL) {
             if (jackTokenizer.symbol() == '(') {
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 jackTokenizer.advance();
                 compileExpression();
                 if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL) {
                     throw new Exception("Syntax Error");
                 }
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 jackTokenizer.advance();
 
             } else if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() != ';' && jackTokenizer.symbol() != ',' && jackTokenizer.symbol() != ')') {
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 jackTokenizer.advance();
                 compileTerm();
             }
             ;
         } else if (jackTokenizer.tokenType() == TokenTypeEnum.KEYWORD) {
             if (jackTokenizer.keyWord() == KeywordsEnum.TRUE || jackTokenizer.keyWord() == KeywordsEnum.FALSE || jackTokenizer.keyWord() == KeywordsEnum.THIS || jackTokenizer.keyWord() == KeywordsEnum.NULL) {
-                outFile.write("<keyword> ");
-                outFile.write(jackTokenizer.keyWord().getType());
-                outFile.write(" </keyword>\n");
+//                writer.write("<keyword> ");
+//                writer.write(jackTokenizer.keyWord().getType());
+//                writer.write(" </keyword>\n");
                 jackTokenizer.advance();
             }
 
         } else if (jackTokenizer.tokenType() == TokenTypeEnum.IDENTIFIER) {
-            outFile.write("<identifier> ");
-            outFile.write(jackTokenizer.identifier());
-            outFile.write(" </identifier>\n");
+//            writer.write("<identifier> ");
+//            writer.write(jackTokenizer.identifier());
+//            writer.write(" </identifier>\n");
             jackTokenizer.advance();
             while (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && (jackTokenizer.symbol() == '.' || jackTokenizer.symbol() == '(' || jackTokenizer.symbol() == '[')) {
                 if (jackTokenizer.symbol() == '.') {
-                    outFile.write("<symbol> ");
-                    outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                    outFile.write(" </symbol>\n");
+//                    writer.write("<symbol> ");
+//                    writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                    writer.write(" </symbol>\n");
                     jackTokenizer.advance();
                     if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
                         throw new Exception("Syntax Error");
                     }
-                    outFile.write("<identifier> ");
-                    outFile.write(jackTokenizer.identifier());
-                    outFile.write(" </identifier>\n");
+//                    writer.write("<identifier> ");
+//                    writer.write(jackTokenizer.identifier());
+//                    writer.write(" </identifier>\n");
                     jackTokenizer.advance();
                 } else if (jackTokenizer.symbol() == '(' || jackTokenizer.symbol() == '[') {
-                    outFile.write("<symbol> ");
-                    outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                    outFile.write(" </symbol>\n");
+//                    writer.write("<symbol> ");
+//                    writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                    writer.write(" </symbol>\n");
                     if (jackTokenizer.symbol() == '[') {
                         jackTokenizer.advance();
                         compileExpression();
@@ -660,54 +576,54 @@ public class CompilationEngine {
                     if (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || (jackTokenizer.symbol() != ')' && jackTokenizer.symbol() != ']')) {
                         throw new Exception("Syntax Error");
                     }
-                    outFile.write("<symbol> ");
-                    outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                    outFile.write(" </symbol>\n");
+//                    writer.write("<symbol> ");
+//                    writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                    writer.write(" </symbol>\n");
                     jackTokenizer.advance();
 
                 }
             }
         } else if (jackTokenizer.tokenType() == TokenTypeEnum.INT_CONST) {
-            outFile.write("<integerConstant> ");
-            outFile.write("" + jackTokenizer.intVal());
-            outFile.write(" </integerConstant>\n");
+//            writer.write("<integerConstant> ");
+//            writer.write("" + jackTokenizer.intVal());
+//            writer.write(" </integerConstant>\n");
             jackTokenizer.advance();
             if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.isOp()) {
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
 
                 jackTokenizer.advance();
                 compileTerm();
             }
         } else if (jackTokenizer.tokenType() == TokenTypeEnum.STRING_CONST) {
-            outFile.write("<stringConstant> ");
-            outFile.write(jackTokenizer.stringVal());
-            outFile.write(" </stringConstant>\n");
+//            writer.write("<stringConstant> ");
+//            writer.write(jackTokenizer.stringVal());
+//            writer.write(" </stringConstant>\n");
             jackTokenizer.advance();
         }
-        outFile.write("</term>\n");
+//        writer.write("</term>\n");
     }
 
     //Compiles a comma-separated list of expression
     public void compileExpressionList () throws Exception {
-        outFile.write("<expressionList>\n");
+//        writer.write("<expressionList>\n");
         boolean isCommaLast = false;
         jackTokenizer.advance();
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ')') {
             compileExpression();
             isCommaLast = false;
             if (jackTokenizer.symbol() == ')') {
-                outFile.write("</expressionList>\n");
+//                writer.write("</expressionList>\n");
                 return;
             }
             if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == ',') {
                 if (isCommaLast) {
                     throw new Exception("Syntax Error");
                 }
-                outFile.write("<symbol> ");
-                outFile.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
-                outFile.write(" </symbol>\n");
+//                writer.write("<symbol> ");
+//                writer.write(jackTokenizer.getSymbolString(jackTokenizer.symbol()));
+//                writer.write(" </symbol>\n");
                 isCommaLast = true;
                 jackTokenizer.advance();
                 if (jackTokenizer.tokenType() == TokenTypeEnum.SYMBOL && jackTokenizer.symbol() == ',') {
@@ -718,7 +634,7 @@ public class CompilationEngine {
             }
         }
         if (jackTokenizer.symbol() == ')') {
-            outFile.write("</expressionList>\n");
+//            writer.write("</expressionList>\n");
         } else {
             throw new Exception("Syntax Error");
         }

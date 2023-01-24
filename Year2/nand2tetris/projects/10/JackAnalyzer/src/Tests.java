@@ -7,12 +7,14 @@ import java.io.IOException;
 
 public class Tests {
 
-    File testFile = new File("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Square/Square.jack");
+    File testFile = new File("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Tests/SquareTest/Main.jack");
     FileWriter testOut = new FileWriter("/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Square/SquareTest.xml");
-
+    String[] folderPath = new String[]{"/Users/omrilevy/Documents/B.Sc_Computer_Science/Year2/nand2tetris/projects/10/Tests/ArrayTest/"};
 
     private JackTokenizer tokenizer;
     private CompilationEngine engine;
+    private JackAnalyzer analyzer;
+
 
     public Tests () throws IOException {
     }
@@ -23,6 +25,16 @@ public class Tests {
         while (tokenizer.hasMoreTokens()) {
             tokenizer.advance();
             System.out.println(tokenizer.getToken());
+        }
+    }
+
+    @Test
+    public void tokenTypeTest() throws FileNotFoundException {
+        tokenizer = new JackTokenizer(testFile);
+        while (tokenizer.hasMoreTokens()) {
+            tokenizer.advance();
+            System.out.println("<"+tokenizer.tokenType().getType()+"> "+
+                    tokenizer.getToken()+" </"+tokenizer.tokenType().getType()+">");
         }
     }
 
@@ -38,6 +50,11 @@ public class Tests {
         tokenizer = new JackTokenizer(testFile);
         tokenizer.setToken("y");
         System.out.println(tokenizer.tokenType().getType());
+    }
+
+    @Test
+    public void testCompileEngine() throws Exception {
+        JackAnalyzer.main(folderPath);
     }
 
 }
