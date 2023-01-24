@@ -2,6 +2,8 @@
 *.zip
 *.pdf
 *.iml
+*.jack
+*.xml
 Linear_Algebra_II
 AdvancedPrograming
 .idea
