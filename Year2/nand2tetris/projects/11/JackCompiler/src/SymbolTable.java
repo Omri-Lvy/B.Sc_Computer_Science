@@ -57,15 +57,24 @@ public class SymbolTable {
     }
 
     public String kindOf(String name) {
-        return table.get(name).kind();
+        if (table.get(name) != null) {
+            return table.get(name).kind();
+        }
+        return null;
     }
 
     public String typeOf(String name) {
-        return table.get(name).type();
+        if (table.get(name) != null) {
+            return table.get(name).type();
+        }
+        return null;
     }
 
     public int indexOf(String name) {
-        return table.get(name).index();
+        if (table.get(name) != null) {
+            return table.get(name).index();
+        }
+        return -1;
     }
 
 }
