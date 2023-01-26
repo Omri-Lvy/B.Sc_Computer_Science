@@ -21,12 +21,24 @@ public class VMWriter {
     }
 
     // write a VM arithmetic-logical command
-    public void writeArithmetic(String command) throws IOException {
-        if (command.equals('*')) {
+    public void writeArithmetic(char command) throws IOException {
+        if (command = '*') {
             writeCall("Math.multiply",2);
         }
-        else if (command.equals('/')) {
+        else if (command = '/' ) {
             writeCall("Math.divide",2);
+        }
+        else if (command = '+') {
+            outFile.write("add\n");
+        }
+        else if (command = '-') {
+            outFile.write("sub\n");
+        }
+        else if (command = '<') {
+            outFile.write("lt\n");
+        }
+        else if (command = '>') {
+            outFile.write("gt\n");
         }
         else {
             outFile.write(command + "\n");

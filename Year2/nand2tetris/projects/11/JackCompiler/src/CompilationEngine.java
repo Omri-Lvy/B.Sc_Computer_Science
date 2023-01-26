@@ -240,15 +240,24 @@ public class CompilationEngine {
         jackTokenizer.advance();
         subRutineTable.define(varName,varType,"local");
         while (jackTokenizer.tokenType() != TokenTypeEnum.SYMBOL || jackTokenizer.symbol() != ';') {
-            if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
-                throw new Exception("Syntax Error");
+            if (jackTokenizer.symbol() == ',') {
+                jackTokenizer.advance();
+                if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
+                    throw new Exception("Syntax Error");
+                }
+                varName = jackTokenizer.identifier();
             }
-            varType = jackTokenizer.keyWord().getType();
-            jackTokenizer.advance();
-            if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
-                throw new Exception("Syntax Error");
+            else {
+                if (jackTokenizer.tokenType() != TokenTypeEnum.KEYWORD) {
+                    throw new Exception("Syntax Error");
+                }
+                varType = jackTokenizer.keyWord().getType();
+                jackTokenizer.advance();
+                if (jackTokenizer.tokenType() != TokenTypeEnum.IDENTIFIER) {
+                    throw new Exception("Syntax Error");
+                }
+                varName = jackTokenizer.identifier();
             }
-            varName = jackTokenizer.identifier();
             jackTokenizer.advance();
             subRutineTable.define(varName,varType,"local");
         }
