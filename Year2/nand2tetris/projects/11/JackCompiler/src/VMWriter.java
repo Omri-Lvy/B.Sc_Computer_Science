@@ -1,10 +1,11 @@
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class VMWriter {
 
     private FileWriter outFile;
+    public int ifCounter = 0; // reset if Counter
+    public int whileCounter = 0; // reset whileConter
 
     public VMWriter(FileWriter file) throws IOException {
         outFile = file;
@@ -21,28 +22,30 @@ public class VMWriter {
     }
 
     // write a VM arithmetic-logical command
-    public void writeArithmetic(char command) throws IOException {
-        if (command = '*') {
+    public void writeArithmetic(Character command) throws IOException {
+        if (command.equals('*')) {
             writeCall("Math.multiply",2);
         }
-        else if (command = '/' ) {
+        else if (command.equals('/')) {
             writeCall("Math.divide",2);
         }
-        else if (command = '+') {
+        else if (command.equals('+')) {
             outFile.write("add\n");
         }
-        else if (command = '-') {
+        else if (command.equals('-')) {
             outFile.write("sub\n");
         }
-        else if (command = '<') {
+        else if (command.equals('<')) {
             outFile.write("lt\n");
         }
-        else if (command = '>') {
+        else if (command.equals('>')) {
             outFile.write("gt\n");
         }
-        else {
-            outFile.write(command + "\n");
-        }
+    }
+
+    // write a VM arithmetic-logical command
+    public void writeArithmetic(String command) throws IOException {
+        outFile.write(command + "\n");
     }
 
     // write a VM label command
